@@ -1,12 +1,14 @@
 package day1;
 
-public class Pair {
+public class Triple {
     private int first;
     private int second;
+    private int third;
 
-    public Pair(int first, int second) {
+    public Triple(int first, int second, int third) {
         this.first = first;
         this.second = second;
+        this.third = third;
     }
 
     public int getFirst() {
@@ -15,5 +17,9 @@ public class Pair {
 
     public int getSecond() {
         return second;
+    }
+
+    public int getThird() {
+        return third;
     }
 }

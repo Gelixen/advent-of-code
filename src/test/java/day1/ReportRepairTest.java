@@ -9,42 +9,46 @@ class ReportRepairTest {
 
     @Test
     void findSumPair_pairWithZero() {
-        int[] input = new int[]{5, 0};
+        int[] input = new int[]{5, 0, 0};
 
-        Pair result = ReportRepair.findSumPair(input, 5);
+        Triple result = ReportRepair.findSumPair(input, 5);
 
         assertEquals(5, result.getFirst());
         assertEquals(0, result.getSecond());
+        assertEquals(0, result.getThird());
     }
 
     @Test
     void findSumPair_matchingPair() {
-        int[] input = new int[]{3, 3};
+        int[] input = new int[]{3, 3, 3};
 
-        Pair result = ReportRepair.findSumPair(input, 6);
+        Triple result = ReportRepair.findSumPair(input, 9);
 
         assertEquals(3, result.getFirst());
         assertEquals(3, result.getSecond());
+        assertEquals(3, result.getThird());
     }
 
     @Test
     void findSumPair_inputOfThree() {
         int[] input = new int[]{2, 0, 5};
 
-        Pair result = ReportRepair.findSumPair(input, 5);
+        Triple result = ReportRepair.findSumPair(input, 7);
 
-        assertEquals(0, result.getFirst());
-        assertEquals(5, result.getSecond());
+        assertEquals(2, result.getFirst());
+        assertEquals(0, result.getSecond());
+        assertEquals(5, result.getThird());
     }
 
     @Test
     void findSumPair_inputOfFive() {
         int[] input = new int[]{2, 1, 4, 3, 5};
 
-        Pair result = ReportRepair.findSumPair(input, 9);
+        Triple result = ReportRepair.findSumPair(input, 9);
 
-        assertEquals(4, result.getFirst());
-        assertEquals(5, result.getSecond());
+        assertEquals(2, result.getFirst());
+        assertEquals(4, result.getSecond());
+        assertEquals(3, result.getThird());
     }
 
     @Test
@@ -55,29 +59,29 @@ class ReportRepairTest {
     }
 
     @Test
-    void multiplyTwoByZero_Zero() {
-        Pair pair = new Pair(0, 2);
+    void multiplyZeroByTwoByThree_Zero() {
+        Triple triple = new Triple(0, 2, 3);
 
-        int result = ReportRepair.multiply(pair);
+        int result = ReportRepair.multiply(triple);
 
         assertEquals(0, result);
     }
 
     @Test
-    void multiplyTwoByOne_Two() {
-        Pair pair = new Pair(1, 2);
+    void multiplyOneByTwoByThree_Six() {
+        Triple triple = new Triple(1, 2, 3);
 
-        int result = ReportRepair.multiply(pair);
+        int result = ReportRepair.multiply(triple);
 
-        assertEquals(2, result);
+        assertEquals(6, result);
     }
 
     @Test
-    void multiplyFiveByTen_Fifty() {
-        Pair pair = new Pair(5, 10);
+    void multiplyTwoByFourByTen_Eighty() {
+        Triple triple = new Triple(2, 4, 10);
 
-        int result = ReportRepair.multiply(pair);
+        int result = ReportRepair.multiply(triple);
 
-        assertEquals(50, result);
+        assertEquals(80, result);
     }
 }

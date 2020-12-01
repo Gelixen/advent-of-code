@@ -14,8 +14,8 @@ public class ReportRepair {
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
-        Pair pair = findSumPair(input, SEARCHABLE_SUM);
-        int result = multiply(pair);
+        Triple triple = findSumPair(input, SEARCHABLE_SUM);
+        int result = multiply(triple);
 
         System.out.println(result);
     }
@@ -25,11 +25,13 @@ public class ReportRepair {
         return FileReader.readInput(day);
     }
 
-    public static Pair findSumPair(int[] input, int sumToFind) {
-        for (int i = 0; i < input.length - 1; i++) {
-            for (int j = i + 1; j < input.length; j++) {
-                if (input[i] + input[j] == sumToFind) {
-                    return new Pair(input[i], input[j]);
+    public static Triple findSumPair(int[] input, int sumToFind) {
+        for (int i = 0; i < input.length - 2; i++) {
+            for (int j = i + 1; j < input.length - 1; j++) {
+                for (int k = j + 1; k < input.length; k++) {
+                    if (input[i] + input[j] + input[k] == sumToFind) {
+                        return new Triple(input[i], input[j], input[k]);
+                    }
                 }
             }
         }
@@ -37,8 +39,8 @@ public class ReportRepair {
         throw new RuntimeException("Pair not found!");
     }
 
-    public static int multiply(Pair pair) {
-        return pair.getFirst() * pair.getSecond();
+    public static int multiply(Triple triple) {
+        return triple.getFirst() * triple.getSecond() * triple.getThird();
     }
 
 }
