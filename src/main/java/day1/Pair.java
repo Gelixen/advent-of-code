@@ -1,19 +1,19 @@
 package day1;
 
-public class Pair<T, K> {
-    private T first;
-    private K second;
+public class Pair {
+    private int first;
+    private int second;
 
-    public Pair(T first, K second) {
+    public Pair(int first, int second) {
         this.first = first;
         this.second = second;
     }
 
-    public T getFirst() {
+    public int getFirst() {
         return first;
     }
 
-    public K getSecond() {
+    public int getSecond() {
         return second;
     }
 }

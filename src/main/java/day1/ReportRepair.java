@@ -14,7 +14,7 @@ public class ReportRepair {
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
-        Pair<Integer, Integer> pair = findSumPair(input, SEARCHABLE_SUM);
+        Pair pair = findSumPair(input, SEARCHABLE_SUM);
         int result = multiply(pair);
 
         System.out.println(result);
@@ -25,11 +25,11 @@ public class ReportRepair {
         return FileReader.readInput(day);
     }
 
-    public static Pair<Integer, Integer> findSumPair(int[] input, int sumToFind) {
+    public static Pair findSumPair(int[] input, int sumToFind) {
         for (int i = 0; i < input.length - 1; i++) {
             for (int j = i + 1; j < input.length; j++) {
                 if (input[i] + input[j] == sumToFind) {
-                    return new Pair<>(input[i], input[j]);
+                    return new Pair(input[i], input[j]);
                 }
             }
         }
@@ -37,7 +37,7 @@ public class ReportRepair {
         throw new RuntimeException("Pair not found!");
     }
 
-    public static int multiply(Pair<Integer, Integer> pair) {
+    public static int multiply(Pair pair) {
         return pair.getFirst() * pair.getSecond();
     }
 
