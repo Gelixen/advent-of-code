@@ -1,4 +1,4 @@
-package day1;
+package _2020.day1;
 
 import lombok.extern.java.Log;
 import util.SolvableTask;

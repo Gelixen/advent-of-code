@@ -1,4 +1,4 @@
-package day1;
+package _2020.day1;
 
 import org.junit.jupiter.api.Test;
 
