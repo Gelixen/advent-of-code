@@ -1,10 +1,12 @@
 package day1;
 
+import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
+@Log
 public class ReportRepair implements SolvableTask {
 
     private static final int SEARCHABLE_SUM = 2020;
@@ -27,7 +29,7 @@ public class ReportRepair implements SolvableTask {
         Triple triple = findSumPair(input, SEARCHABLE_SUM);
         int result = multiply(triple);
 
-        System.out.println(result);
+        log.info(String.valueOf(result));
     }
 
     public static Triple findSumPair(int[] input, int sumToFind) {

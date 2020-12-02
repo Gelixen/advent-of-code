@@ -1,10 +1,12 @@
 package day2;
 
+import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
+@Log
 public class PasswordPhilosophy implements SolvableTask {
 
     @Override
@@ -23,7 +25,7 @@ public class PasswordPhilosophy implements SolvableTask {
                 .filter(PasswordWithPolicy::isValid)
                 .count();
 
-        System.out.println(result);
+        log.info(String.valueOf(result));
     }
 
     public static PasswordWithPolicy toPasswordWithPolicy(String line) {
