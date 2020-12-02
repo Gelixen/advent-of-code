@@ -1,16 +1,26 @@
 package day1;
 
-import util.FileReader;
+import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
-public class ReportRepair {
+public class ReportRepair implements SolvableTask {
 
     private static final int SEARCHABLE_SUM = 2020;
 
+    @Override
+    public String getPackageName() {
+        return MethodHandles.lookup().lookupClass().getPackageName();
+    }
+
     public static void main(String[] args) {
-        int[] input = Arrays.stream(getInput().split("\n"))
+        new ReportRepair().solve();
+    }
+
+    @Override
+    public void solve() {
+        int[] input = Arrays.stream(getInputLines())
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
@@ -18,11 +28,6 @@ public class ReportRepair {
         int result = multiply(triple);
 
         System.out.println(result);
-    }
-
-    private static String getInput() {
-        String day = MethodHandles.lookup().lookupClass().getPackageName();
-        return FileReader.readInput(day);
     }
 
     public static Triple findSumPair(int[] input, int sumToFind) {

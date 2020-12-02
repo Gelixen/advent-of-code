@@ -1,24 +1,29 @@
 package day2;
 
-import util.FileReader;
+import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
-public class PasswordPhilosophy {
+public class PasswordPhilosophy implements SolvableTask {
+
+    @Override
+    public String getPackageName() {
+        return MethodHandles.lookup().lookupClass().getPackageName();
+    }
 
     public static void main(String[] args) {
-        long result = Arrays.stream(getInput().split("\n"))
+        new PasswordPhilosophy().solve();
+    }
+
+    @Override
+    public void solve() {
+        long result = Arrays.stream(getInputLines())
                 .map(PasswordPhilosophy::toPasswordWithPolicy)
                 .filter(PasswordWithPolicy::isValid)
                 .count();
 
         System.out.println(result);
-    }
-
-    private static String getInput() {
-        String day = MethodHandles.lookup().lookupClass().getPackageName();
-        return FileReader.readInput(day);
     }
 
     public static PasswordWithPolicy toPasswordWithPolicy(String line) {
