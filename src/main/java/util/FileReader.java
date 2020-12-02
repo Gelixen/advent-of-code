@@ -9,9 +9,9 @@ public class FileReader {
 
     private FileReader() {}
 
-    public static String readInput(String day) {
+    public static String readInput(String pathToResource) {
         String resource = ClassLoader.getSystemClassLoader()
-                .getResource(day + "/input.txt")
+                .getResource(pathToResource + "/input.txt")
                 .getFile();
         String path = new File(resource).getAbsolutePath();
 
