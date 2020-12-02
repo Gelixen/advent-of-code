@@ -21,15 +21,15 @@ class PasswordPhilosophyTest {
         runAndAssertToPasswordWithPolicy("ccccccccc", 'c', 2, 9);
     }
 
-    private void runAndAssertToPasswordWithPolicy(String password, char letter, int minOccurrence, int maxOccurrence) {
-        String input = String.format("%d-%d %c: %s", minOccurrence, maxOccurrence, letter, password);
+    private void runAndAssertToPasswordWithPolicy(String password, char letter, int firstPosition, int secondPosition) {
+        String input = String.format("%d-%d %c: %s", firstPosition, secondPosition, letter, password);
 
         PasswordWithPolicy passwordWithPolicy = PasswordPhilosophy.toPasswordWithPolicy(input);
 
         assertEquals(password, passwordWithPolicy.getPassword());
         PasswordPolicy passwordPolicy = passwordWithPolicy.getPasswordPolicy();
         assertEquals(letter, passwordPolicy.getLetter());
-        assertEquals(minOccurrence, passwordPolicy.getLeastOccurrence());
-        assertEquals(maxOccurrence, passwordPolicy.getMostOccurrence());
+        assertEquals(firstPosition - 1, passwordPolicy.getFirstPosition());
+        assertEquals(secondPosition - 1, passwordPolicy.getSecondPosition());
     }
 }

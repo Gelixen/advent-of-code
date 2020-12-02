@@ -26,10 +26,10 @@ public class PasswordPhilosophy {
 
         String password = parts[3];
         char letter = parts[2].charAt(0);
-        int leastOccurrence = Integer.parseInt(parts[0]);
-        int mostOccurrence = Integer.parseInt(parts[1]);
+        int firstPosition = Integer.parseInt(parts[0]) - 1;
+        int secondPosition = Integer.parseInt(parts[1]) - 1;
 
-        PasswordPolicy passwordPolicy = new PasswordPolicy(letter, leastOccurrence, mostOccurrence);
+        PasswordPolicy passwordPolicy = new PasswordPolicy(letter, firstPosition, secondPosition);
 
         return new PasswordWithPolicy(password, passwordPolicy);
     }

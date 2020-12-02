@@ -3,43 +3,41 @@ package day2;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PasswordPolicyTest {
 
     @Test
-    void isValid_aPresent_valid() {
-        runAndAssertIsValid("abcde", 'a', 1, 3, true);
+    void isValid_aAtFirstPositionOnly_valid() {
+        runAndAssertIsValid("abcde", 'a', 0, 2, true);
     }
 
     @Test
-    void isValid_bMissing_invalid() {
-        runAndAssertIsValid("cdefg", 'b', 1, 3, false);
+    void isValid_zAtSecondPositionOnly_valid() {
+        runAndAssertIsValid("aaaz", 'z', 1, 3, true);
     }
 
     @Test
-    void isValid_cPresent_valid() {
-        runAndAssertIsValid("ccccccccc", 'c', 2, 9, true);
+    void isValid_bAtNeitherPositions_invalid() {
+        runAndAssertIsValid("cdefg", 'b', 0, 2, false);
     }
 
     @Test
-    void isValid_cTooMany_invalid() {
-        runAndAssertIsValid("cc", 'c', 0, 1, false);
+    void isValid_cAtBothPositions_invalid() {
+        runAndAssertIsValid("ccccccccc", 'c', 1, 8, false);
     }
 
     @Test
-    void isValid_cTooFew_invalid() {
-        runAndAssertIsValid("cc", 'c', 3, 4, false);
+    void isValid_samePosition_cPresentTwice_invalid() {
+        runAndAssertIsValid("ccc", 'c', 1, 1, false);
     }
 
     @Test
-    void isValid_cPresent_invalid() {
-        runAndAssertIsValid("c", 'c', 0, 0, false);
+    void isValid_samePosition_cMissing_invalid() {
+        runAndAssertIsValid("aaa", 'c', 0, 0, false);
     }
 
-    private void runAndAssertIsValid(String password, char letter, int leastOccurrence, int mostOccurrence, boolean expectedResult) {
-        PasswordPolicy passwordPolicy = new PasswordPolicy(letter, leastOccurrence, mostOccurrence);
+    private void runAndAssertIsValid(String password, char letter, int firstPosition, int secondPosition, boolean expectedResult) {
+        PasswordPolicy passwordPolicy = new PasswordPolicy(letter, firstPosition, secondPosition);
 
         boolean result = passwordPolicy.isValid(password);
 
