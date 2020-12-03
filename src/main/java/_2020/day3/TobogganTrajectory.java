@@ -27,7 +27,13 @@ public class TobogganTrajectory implements SolvableTask {
     @Override
     public void solve() {
         prepareData();
-        int result = findTreesCount(1, 3);
+
+        int result = findTreesCount(1, 1);
+        result *= findTreesCount(1, 3);
+        result *= findTreesCount(1, 5);
+        result *= findTreesCount(1, 7);
+        result *= findTreesCount(2, 1);
+
         log.info(String.valueOf(result));
     }
 
