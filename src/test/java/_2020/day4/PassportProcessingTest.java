@@ -70,4 +70,47 @@ class PassportProcessingTest {
                 new PassportProcessing().mapToPassport("aaa:2013")
         );
     }
+
+    @Test
+    void mapToPassport_eyrTooLow_hgtWithoutUnits_pidBadFormat_validationFailed() {
+        assertThrows(NullPointerException.class, () ->
+                new PassportProcessing().mapToPassport(
+                        "eyr:1972 cid:100\n" +
+                                "hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926"
+                ).build()
+        );
+    }
+
+    @Test
+    void mapToPassport_eyrTooLow_validationFailed() {
+        assertThrows(NullPointerException.class, () ->
+                new PassportProcessing().mapToPassport(
+                        "iyr:2019\n" +
+                                "hcl:#602927 eyr:1967 hgt:170cm\n" +
+                                "ecl:grn pid:012533040 byr:1946"
+                ).build()
+        );
+    }
+
+    @Test
+    void mapToPassport_hclBadFormat_validationFailed() {
+        assertThrows(NullPointerException.class, () ->
+                new PassportProcessing().mapToPassport(
+                        "hcl:dab227 iyr:2012\n" +
+                                "ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277"
+                ).build()
+        );
+    }
+
+    @Test
+    void mapToPassport_allValuesInvalid_validationFailed() {
+        assertThrows(NullPointerException.class, () ->
+                new PassportProcessing().mapToPassport(
+                        "hgt:59cm ecl:zzz\n" +
+                                "eyr:2038 hcl:74454a iyr:2023\n" +
+                                "pid:3556412378 byr:2007"
+                ).build()
+        );
+    }
+
 }
