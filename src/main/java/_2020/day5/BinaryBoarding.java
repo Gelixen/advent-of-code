@@ -5,7 +5,10 @@ import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
-import java.util.OptionalInt;
+import java.util.Set;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 @Log
 public class BinaryBoarding implements SolvableTask {
@@ -18,8 +21,25 @@ public class BinaryBoarding implements SolvableTask {
     private static final int COLUMN_MAX = 7;
     private static final int COLUMN_MIN = 0;
 
+    @Override
+    public String getPackageName() {
+        return MethodHandles.lookup().lookupClass().getPackageName();
+    }
+
     public static void main(String[] args) {
         new BinaryBoarding().solve();
+    }
+
+    @Override
+    public void solve() {
+        Set<Integer> seatIds = Arrays.stream(getInputLines())
+                .map(BinaryBoarding::findSeat)
+                .map(Seat::getId)
+                .collect(toUnmodifiableSet());
+
+        int freeSeatId = findFreeSeat(seatIds);
+
+        log.info(String.valueOf(freeSeatId));
     }
 
     public static Seat findSeat(String code) {
@@ -46,19 +66,14 @@ public class BinaryBoarding implements SolvableTask {
         return max;
     }
 
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
-    }
+    private int findFreeSeat(Set<Integer> seatIds) {
+        int minId = seatIds.stream().mapToInt(i -> i).min().orElseThrow();
+        int maxId = seatIds.stream().mapToInt(i -> i).max().orElseThrow();
 
-    @Override
-    public void solve() {
-        OptionalInt highestSeatId = Arrays.stream(getInputLines())
-                .map(BinaryBoarding::findSeat)
-                .mapToInt(Seat::getId)
-                .max();
-
-        log.info(String.valueOf(highestSeatId.orElse(-1)));
+        return IntStream.range(minId, maxId)
+                .filter(id -> !seatIds.contains(id))
+                .findFirst()
+                .orElseThrow();
     }
 
 }
