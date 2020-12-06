@@ -7,43 +7,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CustomCustomsTest {
 
     @Test
-    void countDistinctGroupAnswers_singleAnswer_one() {
-        long result = CustomCustoms.countDistinctGroupAnswers("b");
+    void countGroupAgreedAnswers_singleAnswer_one() {
+        long result = CustomCustoms.countGroupAgreedAnswers("b");
 
         assertEquals(1, result);
     }
 
     @Test
-    void countDistinctGroupAnswers_oneLineDistinctAnswers_three() {
-        long result = CustomCustoms.countDistinctGroupAnswers("abc");
+    void countGroupAgreedAnswers_oneLineDistinctAnswers_three() {
+        long result = CustomCustoms.countGroupAgreedAnswers("abc");
 
         assertEquals(3, result);
     }
 
     @Test
-    void countDistinctGroupAnswers_multilineDistinctAnswers_three() {
-        long result = CustomCustoms.countDistinctGroupAnswers("""
+    void countGroupAgreedAnswers_multilineDistinctAnswers_three() {
+        long result = CustomCustoms.countGroupAgreedAnswers("""
                 a
                 b
                 c"""
         );
 
-        assertEquals(3, result);
+        assertEquals(0, result);
     }
 
     @Test
-    void countDistinctGroupAnswers_multilineNonDistinctAnswers_three() {
-        long result = CustomCustoms.countDistinctGroupAnswers("""
+    void countGroupAgreedAnswers_multilineNonDistinctAnswers_three() {
+        long result = CustomCustoms.countGroupAgreedAnswers("""
                 ab
                 ac"""
         );
 
-        assertEquals(3, result);
+        assertEquals(1, result);
     }
 
     @Test
-    void countDistinctGroupAnswers_multilineIdenticalAnswers_one() {
-        long result = CustomCustoms.countDistinctGroupAnswers("""
+    void countGroupAgreedAnswers_multilineIdenticalAnswers_one() {
+        long result = CustomCustoms.countGroupAgreedAnswers("""
                 a
                 a
                 a
@@ -54,19 +54,19 @@ class CustomCustomsTest {
     }
 
     @Test
-    void countDistinctGroupAnswers_multilineSemiIdenticalAnswers_six() {
-        long result = CustomCustoms.countDistinctGroupAnswers("""
+    void countGroupAgreedAnswers_multilineSemiIdenticalAnswers_six() {
+        long result = CustomCustoms.countGroupAgreedAnswers("""
                 abcx
                 abcy
                 abcz"""
         );
 
-        assertEquals(6, result);
+        assertEquals(3, result);
     }
 
     @Test
-    void sumGroupsAnswers() {
-        long result = CustomCustoms.sumGroupsAnswers(
+    void sumGroupsAgreedAnswers() {
+        long result = CustomCustoms.sumGroupsAgreedAnswers(
                 new String[]{
                         "abc",
                         """
@@ -88,6 +88,6 @@ class CustomCustomsTest {
                 }
         );
 
-        assertEquals(11, result);
+        assertEquals(6, result);
     }
 }

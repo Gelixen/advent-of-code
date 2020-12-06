@@ -5,6 +5,9 @@ import util.SolvableTask;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Log
 public class CustomCustoms implements SolvableTask {
@@ -13,16 +16,22 @@ public class CustomCustoms implements SolvableTask {
         new CustomCustoms().solve();
     }
 
-    public static long sumGroupsAnswers(String[] inputLines) {
+    public static long sumGroupsAgreedAnswers(String[] inputLines) {
         return Arrays.stream(inputLines)
-                .mapToLong(CustomCustoms::countDistinctGroupAnswers)
+                .mapToLong(CustomCustoms::countGroupAgreedAnswers)
                 .sum();
     }
 
-    public static long countDistinctGroupAnswers(String groupAnswers) {
-        return groupAnswers.chars()
-                .distinct()
+    public static long countGroupAgreedAnswers(String groupAnswers) {
+        Map<Integer, Long> lettersOccurrenceMap = groupAnswers.chars()
                 .filter(CustomCustoms::isNotNewLine)
+                .boxed()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        int peopleInGroupCount = groupAnswers.split("\n").length;
+
+        return lettersOccurrenceMap.values().stream()
+                .filter(letterOccurrence -> peopleInGroupCount == letterOccurrence)
                 .count();
     }
 
@@ -37,7 +46,7 @@ public class CustomCustoms implements SolvableTask {
 
     @Override
     public void solve() {
-        long result = sumGroupsAnswers(getInputLines("\n\n"));
+        long result = sumGroupsAgreedAnswers(getInputLines("\n\n"));
 
         log.info(String.valueOf(result));
     }
