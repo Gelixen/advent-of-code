@@ -1,5 +1,6 @@
 package util;
 
+@FunctionalInterface
 public interface Task {
 
     default String[] getInputLines() {

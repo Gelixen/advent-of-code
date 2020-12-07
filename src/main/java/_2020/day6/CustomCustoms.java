@@ -3,7 +3,6 @@ package _2020.day6;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,11 +36,6 @@ public class CustomCustoms implements SolvableTask {
 
     private static boolean isNotNewLine(int symbol) {
         return symbol != '\n';
-    }
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
     }
 
     @Override

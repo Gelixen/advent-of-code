@@ -3,7 +3,6 @@ package _2020.day5;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -20,11 +19,6 @@ public class BinaryBoarding implements SolvableTask {
     private static final char COLUMN_LOWER_HALF_CHAR = 'L';
     private static final int COLUMN_MAX = 7;
     private static final int COLUMN_MIN = 0;
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
-    }
 
     public static void main(String[] args) {
         new BinaryBoarding().solve();

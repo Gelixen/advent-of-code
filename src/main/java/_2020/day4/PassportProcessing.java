@@ -4,7 +4,6 @@ import _2020.day4.Passport.PassportBuilder;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
 @Log
@@ -14,11 +13,6 @@ public class PassportProcessing implements SolvableTask {
 
     public static void main(String[] args) {
         new PassportProcessing().solve();
-    }
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
     }
 
     @Override
