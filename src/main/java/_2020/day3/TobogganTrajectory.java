@@ -3,7 +3,6 @@ package _2020.day3;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.stream.IntStream;
 
 @Log
@@ -17,11 +16,6 @@ public class TobogganTrajectory implements SolvableTask {
 
     public static void main(String[] args) {
         new TobogganTrajectory().solve();
-    }
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
     }
 
     @Override

@@ -3,7 +3,6 @@ package _2020.day6;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,11 +10,6 @@ import java.util.stream.Collectors;
 
 @Log
 public class CustomCustoms implements SolvableTask {
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
-    }
 
     public static void main(String[] args) {
         new CustomCustoms().solve();

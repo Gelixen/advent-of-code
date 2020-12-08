@@ -11,6 +11,8 @@ public interface Task {
         return FileReader.readInput(packageAsAPath).split(linesSeparator);
     }
 
-    String getPackageName();
+    default String getPackageName() {
+        return this.getClass().getPackageName();
+    }
 
 }

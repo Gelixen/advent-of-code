@@ -3,7 +3,6 @@ package _2020.day7;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,11 +18,6 @@ public class HandyHaversacks implements SolvableTask {
 
     public static void main(String[] args) {
         new HandyHaversacks().solve();
-    }
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
     }
 
     @Override

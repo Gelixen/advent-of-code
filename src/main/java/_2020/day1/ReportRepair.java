@@ -3,18 +3,12 @@ package _2020.day1;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 
 @Log
 public class ReportRepair implements SolvableTask {
 
     private static final int SEARCHABLE_SUM = 2020;
-
-    @Override
-    public String getPackageName() {
-        return MethodHandles.lookup().lookupClass().getPackageName();
-    }
 
     public static void main(String[] args) {
         new ReportRepair().solve();
