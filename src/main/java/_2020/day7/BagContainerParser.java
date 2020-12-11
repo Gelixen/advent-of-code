@@ -26,16 +26,20 @@ public class BagContainerParser {
 
         String[] splitContainedBags = containedBags.split(CONTAINED_BAGS_SPLITTER);
 
-        List<String> trimmedContainedBags = Arrays.stream(splitContainedBags)
-                .map(BagContainerParser::trimTillColorOnly)
+        List<Bag> trimmedContainedBags = Arrays.stream(splitContainedBags)
+                .map(BagContainerParser::mapToBag)
                 .collect(Collectors.toList());
 
         return new BagContainer(containerBag, trimmedContainedBags);
     }
 
-    private static String trimTillColorOnly(String bag) {
-        int bagColorStartIndex = bag.indexOf(" ") + 1;
-        int bagColorEndIndex = bag.indexOf(" bag");
-        return bag.substring(bagColorStartIndex, bagColorEndIndex);
+    private static Bag mapToBag(String bag) {
+        String[] amountWithColor = bag.split(" ", 2);
+        int bagColorEndIndex = bag.indexOf(" bag") - 1;
+
+        String color = amountWithColor[1].substring(0, bagColorEndIndex - 1);
+        int amount = Integer.parseInt(amountWithColor[0]);
+
+        return new Bag(color, amount);
     }
 }

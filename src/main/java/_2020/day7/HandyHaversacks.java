@@ -4,8 +4,6 @@ import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -14,7 +12,7 @@ public class HandyHaversacks implements SolvableTask {
 
     private static final String SEARCHABLE_BAG = "shiny gold";
 
-    private Map<String, List<String>> bagsMap;
+    private Map<String, List<Bag>> bagsMap;
 
     public static void main(String[] args) {
         new HandyHaversacks().solve();
@@ -24,33 +22,21 @@ public class HandyHaversacks implements SolvableTask {
     public void solve() {
         bagsMap = Arrays.stream(getInputLines())
                 .map(BagContainerParser::parseLine)
-                .flatMap(this::getReversedContainers)
-                .collect(
-                        toMap(
-                                BagContainer::getContainer,
-                                BagContainer::getContained,
-                                (bag1, bag2) -> Stream.concat(bag1.stream(), bag2.stream()).collect(Collectors.toList())
-                        )
-                );
+                .collect(toMap(BagContainer::getContainer, BagContainer::getContained));
 
-        Set<String> containedBagsCount = findPossibleContainers(SEARCHABLE_BAG);
+        int containedOnlyBagsCount = findAllBagsCount(SEARCHABLE_BAG) - 1;
 
-        log.info(String.valueOf(containedBagsCount.size()));
+        log.info(String.valueOf(containedOnlyBagsCount));
     }
 
-    private Stream<BagContainer> getReversedContainers(BagContainer bc) {
-        return bc.getContained().stream()
-                .map(bag -> new BagContainer(bag, Collections.singletonList(bc.getContainer())));
-    }
+    private int findAllBagsCount(String bag) {
+        int totalBagsCount = 1;
 
-    private Set<String> findPossibleContainers(String bag) {
-        List<String> bagContainers = bagsMap.getOrDefault(bag, Collections.emptyList());
+        for (Bag bagContainer : bagsMap.getOrDefault(bag, Collections.emptyList())) {
+            totalBagsCount += (bagContainer.getAmount() * findAllBagsCount(bagContainer.getColor()));
+        }
 
-        Set<String> allPossibleContainers = new HashSet<>(bagContainers);
-
-        bagContainers.forEach(b -> allPossibleContainers.addAll(findPossibleContainers(b)));
-
-        return allPossibleContainers;
+        return totalBagsCount;
     }
 
 }

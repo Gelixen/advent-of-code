@@ -7,5 +7,5 @@ import java.util.List;
 @Value
 public class BagContainer {
     String container;
-    List<String> contained;
+    List<Bag> contained;
 }
