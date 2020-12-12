@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HandheldHaltingTest {
 
@@ -30,31 +32,31 @@ class HandheldHaltingTest {
     void executeCommand(String command, int expectedAccumulatorValue, int expectedNextCommandIndex) {
         HandheldHalting handheldHalting = new HandheldHalting();
 
-        handheldHalting.executeCommand(command);
+        handheldHalting.executeCommand(command, true);
 
         assertEquals(expectedAccumulatorValue, handheldHalting.getAccumulatorValue());
         assertEquals(expectedNextCommandIndex, handheldHalting.getNextCommandIndex());
     }
 
     @Test
-    void sample() {
-        String[] commands = new String[]{
-                "nop +0",
-                "acc +1",
-                "jmp +4",
-                "acc +3",
-                "jmp -3",
-                "acc -99",
-                "acc +1",
-                "jmp -4",
-                "acc +6"
-        };
+    void executeCommands_sample_withoutSwitching() {
         HandheldHalting handheldHalting = new HandheldHalting();
 
-        int result = handheldHalting.executeCommands(commands);
+        handheldHalting.executeCommands(true);
 
-        assertEquals(5, result);
+        assertFalse(handheldHalting.isEndReached());
         assertEquals(5, handheldHalting.getAccumulatorValue());
         assertEquals(1, handheldHalting.getNextCommandIndex());
+    }
+
+    @Test
+    void executeCommands_sample_withSwitching() {
+        HandheldHalting handheldHalting = new HandheldHalting();
+
+        handheldHalting.executeCommands(false);
+
+        assertTrue(handheldHalting.isEndReached());
+        assertEquals(8, handheldHalting.getAccumulatorValue());
+        assertEquals(9, handheldHalting.getNextCommandIndex());
     }
 }

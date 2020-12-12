@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
+import java.util.Arrays;
+
 @Log
 public class HandheldHalting implements SolvableTask {
 
@@ -11,6 +13,11 @@ public class HandheldHalting implements SolvableTask {
     private int accumulatorValue;
     @Getter
     private int nextCommandIndex;
+    @Getter
+    private boolean endReached;
+
+    private String[] commandsList = getInputLines();
+    private boolean[] visitedCommands = new boolean[commandsList.length];
 
     public static void main(String[] args) {
         new HandheldHalting().solve();
@@ -18,39 +25,79 @@ public class HandheldHalting implements SolvableTask {
 
     @Override
     public void solve() {
-        String[] commandsMatrix = getInputLines();
-
-        int result = executeCommands(commandsMatrix);
-
-        log.info(String.valueOf(result));
+        executeCommands(false);
     }
 
-    public void executeCommand(String commandLine) {
+    public void executeCommand(String commandLine, boolean commandSwitchUsed) {
         String[] commandWithArgument = commandLine.split(" ");
 
         String command = commandWithArgument[0];
-        int argument = Integer.parseInt(commandWithArgument[1]);
+        String rawArgument = commandWithArgument[1];
+        int argument = Integer.parseInt(rawArgument);
 
         switch (command) {
-            case "acc" -> {
-                accumulatorValue += argument;
-                nextCommandIndex++;
-            }
-            case "jmp" -> nextCommandIndex += argument;
-            case "nop" -> nextCommandIndex++;
+            case "acc" -> executeAccumulateCommand(argument);
+            case "jmp" -> executeCommand(commandSwitchUsed, rawArgument, Integer.parseInt(rawArgument), "nop");
+            case "nop" -> executeCommand(commandSwitchUsed, rawArgument, 1, "jmp");
             default -> throw new InvalidCommandException(command);
         }
     }
 
-    public int executeCommands(String[] commands) {
-        boolean[] visitedCommands = new boolean[commands.length];
+    private void executeAccumulateCommand(int argument) {
+        visitedCommands[nextCommandIndex] = true;
+        accumulatorValue += argument;
+        nextCommandIndex += 1;
+    }
 
-        while (!visitedCommands[nextCommandIndex]) {
-            visitedCommands[nextCommandIndex] = true;
-            String nextCommand = commands[nextCommandIndex];
-            executeCommand(nextCommand);
+    private void executeCommand(boolean commandSwitchUsed,
+                                String rawArgument,
+                                int nextCommandIndexIncrement,
+                                String newCommand) {
+
+        if (!commandSwitchUsed && tryCommandSwitch(newCommand, rawArgument)) {
+            return;
         }
 
-        return accumulatorValue;
+        visitedCommands[nextCommandIndex] = true;
+        nextCommandIndex += nextCommandIndexIncrement;
     }
+
+    private boolean tryCommandSwitch(String newCommand, String rawArgument) {
+        String switchedCommand = String.join(" ", newCommand, rawArgument);
+
+        int accumulatorValueBackup = accumulatorValue;
+        int nextCommandIndexBackup = nextCommandIndex;
+        boolean[] visitedCommandsBackup = visitedCommands.clone();
+
+        String[] commandsListBackup = commandsList.clone();
+        commandsList[nextCommandIndex] = switchedCommand;
+
+        executeCommands(true);
+
+        if (endReached) {
+            log.info(String.format(
+                    "Correct program with switched '%s' command: %s ",
+                    switchedCommand,
+                    Arrays.toString(commandsList)
+            ));
+            log.info("Accumulated value: " + accumulatorValue);
+            return true;
+        }
+
+        nextCommandIndex = nextCommandIndexBackup;
+        accumulatorValue = accumulatorValueBackup;
+        commandsList = commandsListBackup;
+        visitedCommands = visitedCommandsBackup;
+
+        return false;
+    }
+
+    public void executeCommands(boolean commandSwitchUsed) {
+        while (!endReached && !visitedCommands[nextCommandIndex]) {
+            String nextCommand = commandsList[nextCommandIndex];
+            executeCommand(nextCommand, commandSwitchUsed);
+            endReached = nextCommandIndex >= commandsList.length;
+        }
+    }
+
 }
