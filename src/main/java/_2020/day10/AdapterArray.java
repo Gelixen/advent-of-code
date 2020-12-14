@@ -1,33 +1,14 @@
 package _2020.day10;
 
-import lombok.With;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Log
 public class AdapterArray implements SolvableTask {
 
-    static final int DIFFERENCES_OF_1_JOLT_KEY = 1;
-    static final int DIFFERENCES_OF_3_JOLT_KEY = 3;
-
-    private final Map<Integer, Integer> voltageDifferencesCounter = new HashMap<>();
-
-    @With
     private Integer[] adaptersVoltages = Arrays.stream(getInputLines()).map(Integer::parseInt).toArray(Integer[]::new);
-
-    private AdapterArray(Integer[] adaptersVoltages) {
-        this();
-        this.adaptersVoltages = adaptersVoltages;
-    }
-
-    public AdapterArray() {
-        voltageDifferencesCounter.put(DIFFERENCES_OF_1_JOLT_KEY, 0);
-        voltageDifferencesCounter.put(DIFFERENCES_OF_3_JOLT_KEY, 0);
-    }
 
     public static void main(String[] args) {
         new AdapterArray().solve();
@@ -35,33 +16,32 @@ public class AdapterArray implements SolvableTask {
 
     @Override
     public void solve() {
-        countAdaptersVoltagesDifferences();
+        long result = countDistinctArrangements();
 
-        log.info(String.valueOf(voltageDifferencesCounter.values().stream().reduce((a, b) -> a * b)));
+        log.info(String.valueOf(result));
     }
 
-    public Map<Integer, Integer> countAdaptersVoltagesDifferences() {
+    public Long countDistinctArrangements() {
+        adaptersVoltages = Arrays.copyOf(adaptersVoltages, adaptersVoltages.length + 1);
+        adaptersVoltages[adaptersVoltages.length - 1] = 0;
         Arrays.sort(adaptersVoltages);
 
-        int previousVoltage = 0;
+        Long[] possiblePaths = new Long[adaptersVoltages.length];
+        Arrays.fill(possiblePaths, 0L);
+        possiblePaths[0] = 1L;
 
-        for (int adaptersVoltage : adaptersVoltages) {
-            int voltagesDifference = adaptersVoltage - previousVoltage;
-            increaseVoltageDifferenceCounterFor(voltagesDifference);
+        for (int i = 0; i < adaptersVoltages.length; i++) {
+            Integer currentElement = adaptersVoltages[i];
 
-            previousVoltage = adaptersVoltage;
+            int maxDifferenceValue = currentElement + 3;
+            for (int j = i + 1; j < i + 4 && j < adaptersVoltages.length; j++) {
+                if (adaptersVoltages[j] <= maxDifferenceValue) {
+                    possiblePaths[j] += possiblePaths[i];
+                }
+            }
         }
 
-        devicesBuiltInAdapter();
-
-        return voltageDifferencesCounter;
+        return possiblePaths[adaptersVoltages.length - 1];
     }
 
-    private void increaseVoltageDifferenceCounterFor(int voltageDifferenceCounterKey) {
-        voltageDifferencesCounter.computeIfPresent(voltageDifferenceCounterKey, (key, value) -> value += 1);
-    }
-
-    private void devicesBuiltInAdapter() {
-        increaseVoltageDifferenceCounterFor(3);
-    }
 }
