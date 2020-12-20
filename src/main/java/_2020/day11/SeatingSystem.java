@@ -12,9 +12,25 @@ import static _2020.day11.PositionState.OCCUPIED_SEAT;
 public class SeatingSystem implements SolvableTask {
 
     private char[][] seatsMatrix = Arrays.stream(getInputLines()).map(String::toCharArray).toArray(char[][]::new);
+    private final SeatsCounter seatsCounter;
+
+    SeatingSystem() {
+        this(new SeatsCounter());
+    }
+
+    SeatingSystem(SeatsCounter seatsCounter) {
+        this.seatsCounter = seatsCounter;
+    }
 
     public static void main(String[] args) {
-        new SeatingSystem().solve();
+        SeatsCounter seatsCounter = new SeatsCounter();
+
+        new SeatingSystem(seatsCounter).solve();
+    }
+
+    SeatingSystem withSeatsMatrix(char[][] matrix) {
+        this.seatsMatrix = matrix;
+        return this;
     }
 
     @Override
@@ -89,7 +105,7 @@ public class SeatingSystem implements SolvableTask {
             newState = OCCUPIED_SEAT;
         }
 
-        if (OCCUPIED_SEAT.equals(currentState) && isAdjacentOccupiedSeatsCountExceeds(4, rowIndex, columnIndex)) {
+        if (OCCUPIED_SEAT.equals(currentState) && isAdjacentOccupiedSeatsCountExceeds(3, rowIndex, columnIndex)) {
             newState = EMPTY_SEAT;
         }
 
@@ -97,19 +113,9 @@ public class SeatingSystem implements SolvableTask {
     }
 
     private boolean isAdjacentOccupiedSeatsCountExceeds(int limit, int rowIndex, int columnIndex) {
-        int occupiedSeatsCount = 0;
-
-        for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
-            if (i >= 0 && i < seatsMatrix.length) {
-                for (int j = columnIndex - 1; j <= columnIndex + 1; j++) {
-                    if (j >= 0 && j < seatsMatrix[0].length)
-                        if (OCCUPIED_SEAT.equalsBySymbol(seatsMatrix[i][j])) {
-                            occupiedSeatsCount++;
-                        }
-                }
-            }
-        }
+        int occupiedSeatsCount = seatsCounter.countAdjacentOccupiedSeats(seatsMatrix, rowIndex, columnIndex);
 
         return occupiedSeatsCount > limit;
     }
+
 }
