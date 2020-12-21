@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SeatingSystemTest {
 
-    private final char[][] SAMPLE_MATRIX = {
+    private final char[][] SAMPLE_MATRIX_RESULT = {
             {'#', '.', '#', 'L', '.', 'L', '#', '.', '#', '#'},
             {'#', 'L', 'L', 'L', '#', 'L', 'L', '.', 'L', '#'},
             {'L', '.', '#', '.', 'L', '.', '.', '#', '.', '.'},
@@ -75,7 +75,7 @@ class SeatingSystemTest {
         char[][] finalMatrix = seatingSystem.iterateRoundsTillNoChanges();
         int occupiedSeatsCount = seatingSystem.getOccupiedSeatsCount();
 
-        assertArrayEquals(SAMPLE_MATRIX, finalMatrix);
+        assertArrayEquals(SAMPLE_MATRIX_RESULT, finalMatrix);
         assertEquals(37, occupiedSeatsCount);
     }
 

@@ -22,27 +22,27 @@ class SeatsCounterTest {
 
     @Test
     void countAdjacentOccupiedSeats_sample_middleEmptySeat_twoAdjacentSeatsOccupied() {
-        SeatsCounter seatsCounter = new SeatsCounter();
+        SeatsCounter seatsCounter = new SeatsCounter().withMatrix(SAMPLE_MATRIX);
 
-        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(SAMPLE_MATRIX, 4, 3);
+        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(4, 3);
 
         assertEquals(2, occupiedSeats);
     }
 
     @Test
     void countAdjacentOccupiedSeats_sample_uppermostOccupiedSeat_noneAdjacentSeatsOccupied() {
-        SeatsCounter seatsCounter = new SeatsCounter();
+        SeatsCounter seatsCounter = new SeatsCounter().withMatrix(SAMPLE_MATRIX);
 
-        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(SAMPLE_MATRIX, 0, 7);
+        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(0, 7);
 
         assertEquals(0, occupiedSeats);
     }
 
     @Test
     void countAdjacentOccupiedSeats_sample_bottommostFirstPosition_singleAdjacentSeatOccupied() {
-        SeatsCounter seatsCounter = new SeatsCounter();
+        SeatsCounter seatsCounter = new SeatsCounter().withMatrix(SAMPLE_MATRIX);
 
-        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(SAMPLE_MATRIX, 8, 0);
+        int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(8, 0);
 
         assertEquals(1, occupiedSeats);
     }

@@ -23,14 +23,7 @@ public class SeatingSystem implements SolvableTask {
     }
 
     public static void main(String[] args) {
-        SeatsCounter seatsCounter = new SeatsCounter();
-
-        new SeatingSystem(seatsCounter).solve();
-    }
-
-    SeatingSystem withSeatsMatrix(char[][] matrix) {
-        this.seatsMatrix = matrix;
-        return this;
+        new SeatingSystem().solve();
     }
 
     @Override
@@ -113,7 +106,7 @@ public class SeatingSystem implements SolvableTask {
     }
 
     private boolean isAdjacentOccupiedSeatsCountExceeds(int limit, int rowIndex, int columnIndex) {
-        int occupiedSeatsCount = seatsCounter.countAdjacentOccupiedSeats(seatsMatrix, rowIndex, columnIndex);
+        int occupiedSeatsCount = seatsCounter.withMatrix(seatsMatrix).countAdjacentOccupiedSeats(rowIndex, columnIndex);
 
         return occupiedSeatsCount > limit;
     }
