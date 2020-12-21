@@ -5,6 +5,7 @@ import util.SolvableTask;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -64,8 +65,10 @@ public class BinaryBoarding implements SolvableTask {
         int minId = seatIds.stream().mapToInt(i -> i).min().orElseThrow();
         int maxId = seatIds.stream().mapToInt(i -> i).max().orElseThrow();
 
+        IntPredicate containsPredicate = seatIds::contains;
+
         return IntStream.range(minId, maxId)
-                .filter(id -> !seatIds.contains(id))
+                .filter(containsPredicate.negate())
                 .findFirst()
                 .orElseThrow();
     }

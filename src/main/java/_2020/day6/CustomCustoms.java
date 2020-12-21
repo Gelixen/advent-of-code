@@ -31,10 +31,10 @@ public class CustomCustoms implements SolvableTask {
     public static long countGroupAgreedAnswers(String groupAnswers) {
         Map<Integer, Long> answersOccurrenceMap = collectAnswersOccurrenceMap(groupAnswers);
 
-        int peopleInGroupCount = groupAnswers.split("\n").length;
+        Long peopleInGroupCount = (long) groupAnswers.split("\n").length;
 
         return answersOccurrenceMap.values().stream()
-                .filter(answerOccurrence -> peopleInGroupCount == answerOccurrence)
+                .filter(peopleInGroupCount::equals)
                 .count();
     }
 
