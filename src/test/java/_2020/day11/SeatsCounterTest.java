@@ -26,7 +26,7 @@ class SeatsCounterTest {
 
         int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(4, 3);
 
-        assertEquals(2, occupiedSeats);
+        assertEquals(8, occupiedSeats);
     }
 
     @Test
@@ -44,7 +44,7 @@ class SeatsCounterTest {
 
         int occupiedSeats = seatsCounter.countAdjacentOccupiedSeats(8, 0);
 
-        assertEquals(1, occupiedSeats);
+        assertEquals(2, occupiedSeats);
     }
 
 }

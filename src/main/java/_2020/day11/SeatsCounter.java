@@ -1,5 +1,6 @@
 package _2020.day11;
 
+import static _2020.day11.PositionState.FLOOR;
 import static _2020.day11.PositionState.OCCUPIED_SEAT;
 
 public class SeatsCounter {
@@ -20,14 +21,32 @@ public class SeatsCounter {
         int occupiedSeatsCount = 0;
 
         for (SurroundingPosition value : SurroundingPosition.values()) {
-            int row = rowIndex + value.getRow();
-            int column = columnIndex + value.getColumn();
-            if (isInsideMatrix(row, column) && isOccupiedSeat(row, column)) {
-                occupiedSeatsCount++;
+            boolean isPositionLookupFinished = false;
+
+            for (int i = 1; !isPositionLookupFinished; i++) {
+                int row = rowIndex + value.getRow() * i;
+                int column = columnIndex + value.getColumn() * i;
+
+                isPositionLookupFinished = canPositionLookupFinish(row, column);
+                occupiedSeatsCount += getOccupiedSeatsCountIncrement(row, column);
             }
         }
 
         return occupiedSeatsCount;
+    }
+
+    private boolean canPositionLookupFinish(int row, int column) {
+        if (!isInsideMatrix(row, column)) {
+            return true;
+        }
+
+        return !isSeat(FLOOR, row, column);
+    }
+
+    private int getOccupiedSeatsCountIncrement(int row, int column) {
+        return isInsideMatrix(row, column) && isSeat(OCCUPIED_SEAT, row, column)
+                ? 1
+                : 0;
     }
 
     private boolean isInsideMatrix(int row, int column) {
@@ -42,8 +61,9 @@ public class SeatsCounter {
         return column >= 0 && column < columnsLength;
     }
 
-    private boolean isOccupiedSeat(int row, int column) {
-        return OCCUPIED_SEAT.equalsBySymbol(seatsMatrix[row][column]);
+    private boolean isSeat(PositionState occupiedSeat, int row, int column) {
+        char symbol = seatsMatrix[row][column];
+        return occupiedSeat.equalsBySymbol(symbol);
     }
 
 }

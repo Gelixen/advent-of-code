@@ -98,7 +98,7 @@ public class SeatingSystem implements SolvableTask {
             newState = OCCUPIED_SEAT;
         }
 
-        if (OCCUPIED_SEAT.equals(currentState) && isAdjacentOccupiedSeatsCountExceeds(3, rowIndex, columnIndex)) {
+        if (OCCUPIED_SEAT.equals(currentState) && isAdjacentOccupiedSeatsCountExceeds(4, rowIndex, columnIndex)) {
             newState = EMPTY_SEAT;
         }
 
