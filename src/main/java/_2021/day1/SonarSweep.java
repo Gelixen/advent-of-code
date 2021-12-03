@@ -23,15 +23,18 @@ public class SonarSweep implements SolvableTask {
         log.info(String.valueOf(depthIncrements));
     }
 
-    private int findDepthIncrements(int[] input) {
-        int lastDepth = input[0];
+    int findDepthIncrements(int[] input) {
+        int lastDepthSum = input[0] + input[1] + input[2];
+        int firstSumElementIndex = 0;
         int depthIncreaseCounter = 0;
 
-        for (int depth : input) {
-            if (depth > lastDepth) {
+        for (int i = 3; i < input.length; i++) {
+            int depthSum = lastDepthSum - input[firstSumElementIndex] + input[i];
+            if (depthSum > lastDepthSum) {
                 depthIncreaseCounter++;
             }
-            lastDepth = depth;
+            firstSumElementIndex++;
+            lastDepthSum = depthSum;
         }
 
         return depthIncreaseCounter;
