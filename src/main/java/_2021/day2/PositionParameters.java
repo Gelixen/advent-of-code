@@ -6,16 +6,21 @@ import lombok.Value;
 public class PositionParameters {
     int horizontalPosition;
     int depth;
+    int aim;
 
     public PositionParameters increaseHorizontalPosition(int step) {
-        return new PositionParameters(horizontalPosition + step, depth);
+        return new PositionParameters(horizontalPosition + step, depth, aim);
+    }
+
+    public PositionParameters increaseAim(int step) {
+        return new PositionParameters(horizontalPosition, depth, aim + step);
     }
 
     public PositionParameters increaseDepth(int step) {
-        return new PositionParameters(horizontalPosition, depth + step);
+        return new PositionParameters(horizontalPosition, depth + step, aim);
     }
 
-    public PositionParameters decreaseDepth(int step) {
-        return new PositionParameters(horizontalPosition, depth - step);
+    public PositionParameters decreaseAim(int step) {
+        return new PositionParameters(horizontalPosition, depth, aim - step);
     }
 }

@@ -15,7 +15,7 @@ public class Dive implements SolvableTask {
     }
 
     public static void main(String[] args) {
-        new Dive(new PositionParameters(0, 0)).solve();
+        new Dive(new PositionParameters(0, 0, 0)).solve();
     }
 
     @Override
