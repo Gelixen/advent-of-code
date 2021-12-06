@@ -3,7 +3,11 @@ package _2021.day4;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.function.Predicate.not;
 
 @Log
 public class GiantSquid implements SolvableTask {
@@ -44,26 +48,29 @@ public class GiantSquid implements SolvableTask {
     }
 
     private int getFinalScore(int[] numberDraws) {
+        int latestWinFinalScore = 0;
+        Integer winningScore;
         for (int numberDraw : numberDraws) {
             drawNumberFromBoards(numberDraw);
 
-            Optional<Integer> winningScore = checkForWinningBoardScore();
+            winningScore = checkForWinningBoardScore();
 
-            if (winningScore.isPresent()) {
-                return winningScore.get() * numberDraw;
+            if (winningScore != null && winningScore != 0) {
+                latestWinFinalScore = winningScore * numberDraw;
             }
         }
-        return 0;
+        return latestWinFinalScore;
     }
 
     private void drawNumberFromBoards(int numberDraw) {
         boards.forEach(board -> board.markNumberDraw(numberDraw));
     }
 
-    private Optional<Integer> checkForWinningBoardScore() {
+    private Integer checkForWinningBoardScore() {
         return boards.stream()
+                .filter(not(Board::isMarked))
                 .filter(Board::winConditionMet)
                 .map(Board::getUnmarkedNumbersSum)
-                .findFirst();
+                .reduce(0, (a, b) -> b);
     }
 }

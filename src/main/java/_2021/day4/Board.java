@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 
 public class Board {
-    protected final int[][] board = new int[5][5];
-    protected final boolean[][] markingBoard = new boolean[5][5];
+    private final int[][] board = new int[5][5];
+    private final boolean[][] markingBoard = new boolean[5][5];
+    private boolean marked;
 
     public void setRow(int rowNumber, int[] intNumbers) {
         board[rowNumber] = intNumbers;
@@ -36,7 +37,7 @@ public class Board {
     }
 
     public boolean winConditionMet() {
-        return (isLineWin(rowChecker()) || isLineWin(columnChecker()));
+        return marked = (isLineWin(rowChecker()) || isLineWin(columnChecker()));
     }
 
     private boolean isLineWin(BiFunction<Integer, Integer, Boolean> checker) {
@@ -80,5 +81,9 @@ public class Board {
         }
 
         return sum;
+    }
+
+    public boolean isMarked() {
+        return marked;
     }
 }
