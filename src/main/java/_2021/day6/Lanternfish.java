@@ -24,13 +24,16 @@ public class Lanternfish implements SolvableTask {
                 .mapToObj(Fish::new)
                 .collect(Collectors.toList());
 
-        for (int day = 0; day < 80; day++) {
+        long[] newFishTrends = new long[257];
+
+        for (int day = 1; day < 9; day++) {
             List<Fish> tempFishes = new ArrayList<>(fishes);
 
             for (Fish fish : fishes) {
                 if (fish.isReadyToSpawnNew()) {
                     fish.reset();
                     tempFishes.add(new Fish());
+                    newFishTrends[day]++;
                 } else {
                     fish.decrease();
                 }
@@ -39,7 +42,14 @@ public class Lanternfish implements SolvableTask {
             fishes = tempFishes;
         }
 
-        log.info(String.valueOf(fishes.size()));
+        long fishCount = fishes.size();
+
+        for (int day = 9; day < 257; day++) {
+            newFishTrends[day] = newFishTrends[day - 9] + newFishTrends[day - 7];
+            fishCount += newFishTrends[day];
+        }
+
+        log.info(String.valueOf(fishCount));
     }
 
 }
