@@ -1,41 +1,40 @@
 package _2021.day5;
 
-import java.util.Collections;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import java.util.List;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public record LineOfVents(Position startPosition, Position endPosition) {
+@AllArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class LineOfVents {
+
+    private Position startPosition;
+    private Position endPosition;
 
     public List<Position> constructLine() {
-        if (isVerticalLine()) {
-            int x = startPosition.x();
-            return getPositionsLine(startPosition.y(), endPosition.y(), y -> new Position(x, y));
-        }
+        int xTrend = getTrend(startPosition.x(), endPosition.x());
+        int yTrend = getTrend(startPosition.y(), endPosition.y());
 
-        if (isHorizontalLine()) {
-            int y = startPosition.y();
-            return getPositionsLine(startPosition.x(), endPosition.x(), x -> new Position(x, y));
-        }
+        int rangeDifferenceX = Math.abs(startPosition.x() - endPosition.x());
+        int rangeDifferenceY = Math.abs(startPosition.y() - endPosition.y());
+        int rangeDifference = Math.max(rangeDifferenceX, rangeDifferenceY);
 
-        return Collections.emptyList();
+        return IntStream.rangeClosed(0, rangeDifference)
+                .mapToObj(i -> new Position(
+                        calculateConcreteCoord(startPosition.x(), xTrend, i),
+                        calculateConcreteCoord(startPosition.y(), yTrend, i)
+                )).collect(Collectors.toList());
     }
 
-    private List<Position> getPositionsLine(int startCoord, int endCoord, IntFunction<Position> createPosition) {
-        int smallerCoord = Math.min(startCoord, endCoord);
-        int biggerCoord = Math.max(startCoord, endCoord);
-
-        return IntStream.rangeClosed(smallerCoord, biggerCoord)
-                .mapToObj(createPosition)
-                .collect(Collectors.toList());
+    private int calculateConcreteCoord(int baseCoord, int coordTrend, int stepNumber) {
+        return baseCoord + coordTrend * stepNumber;
     }
 
-    private boolean isVerticalLine() {
-        return startPosition.x() == endPosition.x();
-    }
-
-    private boolean isHorizontalLine() {
-        return startPosition.y() == endPosition.y();
+    private int getTrend(int startCoord, int endCoord) {
+        return Integer.compare(endCoord, startCoord);
     }
 }
