@@ -4,7 +4,7 @@ import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Log
@@ -16,8 +16,14 @@ public class CalorieCounting implements SolvableTask {
     @Override
     public void solve() {
         List<Integer> elfCarriedCalories = groupCaloriesByElf(getInputLines());
-        
-        System.out.println(Collections.max(elfCarriedCalories));
+
+        int top3ElvesWithMostCaloriesSum = elfCarriedCalories.stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(3)
+                .mapToInt(i -> i)
+                .sum();
+
+        System.out.println(top3ElvesWithMostCaloriesSum);
     }
 
     private List<Integer> groupCaloriesByElf(String[] caloryLines) {
