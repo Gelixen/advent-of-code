@@ -3,7 +3,8 @@ package util;
 public interface Task {
 
     default String[] getInputLines() {
-        return getInputLines("\n");
+        String packageAsAPath = getPackageName().replace(".", "/");
+        return FileReader.readInput(packageAsAPath).lines().toArray(String[]::new);
     }
 
     default String[] getInputLines(String linesSeparator) {
