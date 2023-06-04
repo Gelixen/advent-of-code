@@ -3,9 +3,13 @@ package _2022.day3;
 import lombok.extern.java.Log;
 import util.SolvableTask;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.Collector;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.*;
 
 @Log
 public class RucksackReorganization implements SolvableTask {
@@ -21,28 +25,40 @@ public class RucksackReorganization implements SolvableTask {
     public void solve() {
         String[] rucksacks = getInputLines();
 
-        int findSum = Stream.of(rucksacks)
-                .map(this::splitIntoCompartments)
-                .map(this::findError)
+        int findSum = IntStream.range(0, rucksacks.length)
+                .boxed()
+                .collect(groupByConsecutiveThree(rucksacks))
+                .values()
+                .stream()
+                .map(this::mapToGroup)
+                .map(this::findCommon)
                 .mapToInt(this::rebaseAsIntValue)
                 .sum();
 
         System.out.println(findSum);
     }
 
-    private Rucksack splitIntoCompartments(String line) {
-        int middleBreakPoint = line.length() / 2;
-        String first = line.substring(0, middleBreakPoint);
-        String second = line.substring(middleBreakPoint);
-
-        return new Rucksack(first, second);
+    private static Collector<Integer, ?, Map<Integer, List<String>>> groupByConsecutiveThree(String[] rucksacks) {
+        return groupingBy(index -> index / 3, mapping(idx -> rucksacks[idx], toList()));
     }
 
-    private Character findError(Rucksack rucksack) {
-        Set<Character> first = rucksack.firstCompartment().chars().mapToObj(e -> (char) e).collect(Collectors.toSet());
-        Set<Character> second = rucksack.secondCompartment().chars().mapToObj(e -> (char) e).collect(Collectors.toSet());
-        first.retainAll(second);
-        return first.iterator().next();
+    private Group mapToGroup(List<String> lines) {
+        String firstElf = lines.get(0);
+        String secondElf = lines.get(1);
+        String thirdElf = lines.get(2);
+
+        return new Group(firstElf, secondElf, thirdElf);
+    }
+
+    private Character findCommon(Group group) {
+        Set<Character> firstElfItems = group.firstElf().chars().mapToObj(e -> (char) e).collect(toSet());
+        Set<Character> secondElfItems = group.secondElf().chars().mapToObj(e -> (char) e).collect(toSet());
+        Set<Character> thirdElfItems = group.thirdElf().chars().mapToObj(e -> (char) e).collect(toSet());
+
+        firstElfItems.retainAll(secondElfItems);
+        firstElfItems.retainAll(thirdElfItems);
+
+        return firstElfItems.iterator().next();
     }
 
     private int rebaseAsIntValue(Character character) {
