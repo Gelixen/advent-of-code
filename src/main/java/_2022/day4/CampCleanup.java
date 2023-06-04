@@ -5,6 +5,8 @@ import util.SolvableTask;
 
 import java.util.Arrays;
 
+import static java.util.function.Predicate.not;
+
 @Log
 public class CampCleanup implements SolvableTask {
     public static void main(String[] args) {
@@ -17,7 +19,7 @@ public class CampCleanup implements SolvableTask {
 
         long fullyContainingSectorsCount = Arrays.stream(pairsList)
                 .map(CampCleanup::toPairModel)
-                .filter(CampCleanup::isSectorRangesInclusive)
+                .filter(not(CampCleanup::isMutuallyExclusive))
                 .count();
 
         log.info(String.valueOf(fullyContainingSectorsCount));
@@ -41,21 +43,15 @@ public class CampCleanup implements SolvableTask {
         return new Sector(sectorStart, sectorEnd);
     }
 
-    private static boolean isSectorRangesInclusive(ElfPairSectors elfPairSectors) {
+    private static boolean isMutuallyExclusive(ElfPairSectors elfPairSectors) {
         Sector firstElfSector = elfPairSectors.firstElfSector();
         Sector secondElfSector = elfPairSectors.secondElfSector();
 
-        return withinAnotherElfSectorRange(firstElfSector, secondElfSector)
-                || withinAnotherElfSectorRange(secondElfSector, firstElfSector);
+        return oneSectorEndsBeforeAnotherStarts(firstElfSector, secondElfSector)
+                || oneSectorEndsBeforeAnotherStarts(secondElfSector, firstElfSector);
     }
 
-    private static boolean withinAnotherElfSectorRange(Sector firstSector, Sector secondSector) {
-        int firstSectorStart = firstSector.start();
-        int firstSectorEnd = firstSector.end();
-
-        int secondSectorStart = secondSector.start();
-        int secondSectorEnd = secondSector.end();
-
-        return firstSectorStart >= secondSectorStart && firstSectorEnd <= secondSectorEnd;
+    private static boolean oneSectorEndsBeforeAnotherStarts(Sector firstSector, Sector secondSector) {
+        return firstSector.end() < secondSector.start();
     }
 }
