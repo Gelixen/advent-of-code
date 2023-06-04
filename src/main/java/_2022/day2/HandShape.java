@@ -1,23 +1,21 @@
 package _2022.day2;
 
-import java.util.List;
-
 public enum HandShape {
-    ROCK(1, List.of('A', 'X')),
-    PAPER(2, List.of('B', 'Y')),
-    SCISSORS(3, List.of('C', 'Z'));
+    ROCK(1, 'A'),
+    PAPER(2, 'B'),
+    SCISSORS(3, 'C');
 
     private final int score;
-    private final List<Character> symbols;
+    private final char symbol;
 
-    HandShape(int score, List<Character> symbols) {
+    HandShape(int score, char symbol) {
         this.score = score;
-        this.symbols = symbols;
+        this.symbol = symbol;
     }
 
     public static HandShape fromSymbol(char symbol) {
         for (HandShape shape : HandShape.values()) {
-            if (shape.symbols.contains(symbol)) {
+            if (shape.symbol == symbol) {
                 return shape;
             }
         }

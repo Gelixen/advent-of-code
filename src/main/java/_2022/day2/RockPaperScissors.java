@@ -18,10 +18,10 @@ public class RockPaperScissors implements SolvableTask {
 
     private int countTotal(String[] roundLine) {
         return Arrays.stream(roundLine).map(round -> {
-            String[] handShapes = round.split(" ");
-            char player1HandShapeSymbol = handShapes[0].charAt(0);
-            char player2HandShapeSymbol = handShapes[1].charAt(0);
-            return new Round(player1HandShapeSymbol, player2HandShapeSymbol);
+            String[] roundSymbols = round.split(" ");
+            char handShapeSymbol = roundSymbols[0].charAt(0);
+            char roundEndSymbol = roundSymbols[1].charAt(0);
+            return new Round(handShapeSymbol, roundEndSymbol);
         }).map(Round::calculateScore).mapToInt(i -> i).sum();
     }
 }
