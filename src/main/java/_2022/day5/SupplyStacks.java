@@ -51,9 +51,9 @@ public class SupplyStacks implements SolvableTask {
 
         inputData.rearrangementProcedures()
                 .forEach(procedure -> IntStream.range(0, procedure.amount())
-                        .forEach(__ -> {
+                        .forEach(i -> {
                             Character crateToMove = stacksOfCrates.get(procedure.from() - 1).pop();
-                            stacksOfCrates.get(procedure.to() - 1).push(crateToMove);
+                            stacksOfCrates.get(procedure.to() - 1).add(i, crateToMove);
                         }));
     }
 
