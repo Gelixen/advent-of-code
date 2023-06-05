@@ -16,7 +16,7 @@ public class TuningTrouble implements SolvableTask {
     public void solve() {
         String input = getInputLines()[0];
 
-        int windowSize = 4;
+        int windowSize = 14;
 
         IndexWithWindowPair indexWithWindowPair = IntStream.range(0, input.length() - windowSize)
                 .mapToObj(index -> new IndexWithWindowPair(index, input.substring(index, index + windowSize)))
