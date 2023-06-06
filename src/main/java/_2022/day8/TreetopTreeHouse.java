@@ -19,7 +19,7 @@ public class TreetopTreeHouse implements SolvableTask {
         int columnCount = treeHeightsMatrix[0].length;
         int rowCount = Math.toIntExact(Arrays.stream(treeHeightsMatrix).count());
 
-        int counter = getInitialCounterWithEdges(columnCount, rowCount);
+        int scenicScore = 0;
 
         for (int rowIndex = 1; rowIndex < rowCount - 1; rowIndex++) {
             for (int columnIndex = 1; columnIndex < columnCount - 1; columnIndex++) {
@@ -28,7 +28,7 @@ public class TreetopTreeHouse implements SolvableTask {
                 Function<Integer, Integer> decrementFunction = row -> row - 1;
                 Function<Integer, Integer> incrementFunction = column -> column + 1;
 
-                boolean left = iterateHeightCheckTillEdge(
+                int left = findViewDistanceTillEdge(
                         treeHeightsMatrix,
                         value,
                         decrementFunction.apply(rowIndex),
@@ -36,7 +36,7 @@ public class TreetopTreeHouse implements SolvableTask {
                         decrementFunction,
                         Function.identity()
                 );
-                boolean right = iterateHeightCheckTillEdge(
+                int right = findViewDistanceTillEdge(
                         treeHeightsMatrix,
                         value,
                         incrementFunction.apply(rowIndex),
@@ -44,7 +44,7 @@ public class TreetopTreeHouse implements SolvableTask {
                         incrementFunction,
                         Function.identity()
                 );
-                boolean up = iterateHeightCheckTillEdge(
+                int up = findViewDistanceTillEdge(
                         treeHeightsMatrix,
                         value,
                         rowIndex,
@@ -52,7 +52,7 @@ public class TreetopTreeHouse implements SolvableTask {
                         Function.identity(),
                         decrementFunction
                 );
-                boolean down = iterateHeightCheckTillEdge(
+                int down = findViewDistanceTillEdge(
                         treeHeightsMatrix,
                         value,
                         rowIndex,
@@ -61,17 +61,15 @@ public class TreetopTreeHouse implements SolvableTask {
                         incrementFunction
                 );
 
-                if (left || right || up || down) {
-                    counter++;
+                int temp = left * right * up * down;
+
+                if (temp > scenicScore) {
+                    scenicScore = temp;
                 }
             }
         }
 
-        log.info(String.valueOf(counter));
-    }
-
-    private static int getInitialCounterWithEdges(int columnCount, int rowCount) {
-        return columnCount * 2 + rowCount * 2 - 4;
+        log.info(String.valueOf(scenicScore));
     }
 
     private int[][] getTreeHeightsMatrix() {
@@ -80,7 +78,7 @@ public class TreetopTreeHouse implements SolvableTask {
                 .toArray(int[][]::new);
     }
 
-    private static boolean iterateHeightCheckTillEdge(
+    private static int findViewDistanceTillEdge(
             int[][] treeHeightsMatrix,
             int initialValue,
             Integer rowIndex,
@@ -92,12 +90,16 @@ public class TreetopTreeHouse implements SolvableTask {
                 || rowIndex < 0
                 || columnIndex >= treeHeightsMatrix[0].length
                 || columnIndex < 0) {
-            return true;
+            return 0;
         }
 
         int value = treeHeightsMatrix[rowIndex][columnIndex];
 
-        return initialValue > value && iterateHeightCheckTillEdge(
+        if (value >= initialValue) {
+            return 1;
+        }
+
+        return 1 + findViewDistanceTillEdge(
                 treeHeightsMatrix,
                 initialValue,
                 rowModifier.apply(rowIndex),
