@@ -16,7 +16,9 @@ public class NoSpaceLeftOnDevice implements SolvableTask {
     private static final String DIR_COMMAND_IDENTIFIER = "dir";
     private static final String CHANGE_DIRECTORY_COMMAND_IDENTIFIER = "cd";
     private static final String SHOW_FILES_COMMAND_IDENTIFIER = "ls";
-    private static final int MAX_ALLOWED_DIR_SIZE = 100_000;
+
+    private static final int TOTAL_DISK_SPACE = 70_000_000;
+    private static final int REQUIRED_DISK_SPACE_FOR_UPDATE = 30_000_000;
 
     public static void main(String[] args) {
         new NoSpaceLeftOnDevice().solve();
@@ -28,12 +30,26 @@ public class NoSpaceLeftOnDevice implements SolvableTask {
 
         List<DirectoryWithTotalSize> directoriesWithTotalSize = handleInputData(inputLines);
 
+        long spaceToFreeUp = getSpaceToFreeUp(directoriesWithTotalSize);
+
         long sumOfLessThanAllowedSizeDirs = directoriesWithTotalSize.stream()
-                .filter(directoryWithSize -> directoryWithSize.totalSize() <= MAX_ALLOWED_DIR_SIZE)
+                .filter(directoryWithSize -> directoryWithSize.totalSize() >= spaceToFreeUp)
                 .mapToLong(DirectoryWithTotalSize::totalSize)
-                .sum();
-        
+                .min()
+                .orElseThrow();
+
         log.info(String.valueOf(sumOfLessThanAllowedSizeDirs));
+    }
+
+    private static long getSpaceToFreeUp(List<DirectoryWithTotalSize> directoriesWithTotalSize) {
+        DirectoryWithTotalSize rootDirectory = directoriesWithTotalSize.stream()
+                .filter(a -> a.directoryName().equals("/"))
+                .findFirst()
+                .orElseThrow();
+
+        long freeSpace = TOTAL_DISK_SPACE - rootDirectory.totalSize();
+
+        return REQUIRED_DISK_SPACE_FOR_UPDATE - freeSpace;
     }
 
     private List<DirectoryWithTotalSize> handleInputData(String[] inputLines) {
@@ -59,7 +75,7 @@ public class NoSpaceLeftOnDevice implements SolvableTask {
                             }
                         }
                         case SHOW_FILES_COMMAND_IDENTIFIER -> {
-                            subDirectoriesMap.putIfAbsent(currentDir , new ArrayList<>());
+                            subDirectoriesMap.putIfAbsent(currentDir, new ArrayList<>());
                             directoriesSizeMap.putIfAbsent(currentDir, 0L);
                         }
                     }
@@ -99,7 +115,7 @@ public class NoSpaceLeftOnDevice implements SolvableTask {
                 .map(subDirectories -> countWithSubDirectories(subDirectoriesMap, directoriesSizeMap, subDirectories))
                 .mapToLong(i -> i)
                 .sum();
-        
+
         return parentDirectorySize + subDirectoriesSizeSum;
     }
 
