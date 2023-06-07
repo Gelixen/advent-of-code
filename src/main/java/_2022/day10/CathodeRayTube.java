@@ -12,6 +12,9 @@ import util.SolvableTask;
 @Log
 public class CathodeRayTube implements SolvableTask {
 
+    private static final int CRT_HEIGHT = 6;
+    private static final int CRT_WIDTH = 40;
+
     public static void main(String[] args) {
         new CathodeRayTube().solve();
     }
@@ -42,17 +45,37 @@ public class CathodeRayTube implements SolvableTask {
                 })
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
-        int sum = cycleAndXMap.keySet().stream()
-                .filter(CathodeRayTube::is20OrFurtherRepetitionOf40)
-                .map(g -> g * cycleAndXMap.get(g))
-                .mapToInt(integer -> integer)
-                .sum();
+        char[][] crt = new char[CRT_HEIGHT][CRT_WIDTH];
 
-        log.info(String.valueOf(sum));
+        cycleAndXMap.keySet()
+                .stream()
+                .map(cycleNo -> new Data(
+                                cycleNo % CRT_WIDTH,
+                                (cycleNo - 1) / CRT_WIDTH,
+                                (cycleNo - 1) % CRT_WIDTH,
+                                cycleAndXMap.get(cycleNo)
+                        )
+                )
+                .forEach(data -> {
+                    if (cycleWithinXWindowOfThree(data)) {
+                        crt[data.rowIndex()][data.columnIndex()] = '#';
+                    } else {
+                        crt[data.rowIndex()][data.columnIndex()] = '.';
+                    }
+                });
+
+        for (char[] row : crt) {
+            for (int column = 0; column < crt[0].length; column++) {
+                System.out.print(row[column]);
+            }
+            System.out.println();
+        }
     }
 
-    private static boolean is20OrFurtherRepetitionOf40(Integer cycle) {
-        return (cycle - 20) % 40 == 0;
+    private static boolean cycleWithinXWindowOfThree(Data data) {
+        Integer cycle = data.normalizedCycle();
+        Integer x = data.x();
+        return cycle >= x && cycle <= x + 2;
     }
 
 }
