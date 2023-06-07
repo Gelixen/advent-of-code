@@ -2,7 +2,6 @@ package _2022.day9;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -12,6 +11,11 @@ import util.SolvableTask;
 @Log
 public class RopeBridge implements SolvableTask {
 
+    private static final int HEAD_WITH_TAILS_COUNT = 10;
+    private static final int HEAD_INDEX = 0;
+    private static final int TAILS_START_INDEX = 1;
+    private static final int LAST_TAIL_INDEX = 9;
+
     public static void main(String[] args) {
         new RopeBridge().solve();
     }
@@ -20,52 +24,62 @@ public class RopeBridge implements SolvableTask {
     public void solve() {
         String[] inputLines = getInputLines();
 
-        AtomicReference<Coordinate> headCoordinate = new AtomicReference<>(new Coordinate(0, 0));
-        AtomicReference<Coordinate> tailCoordinate = new AtomicReference<>(new Coordinate(0, 0));
+        final Coordinate[] headAndTailsCoords = new Coordinate[HEAD_WITH_TAILS_COUNT];
+        Arrays.fill(headAndTailsCoords, new Coordinate(0, 0));
 
-        Set<Coordinate> x = Arrays.stream(inputLines)
+        Set<Coordinate> lastTailVisitedUniquePositions = Arrays.stream(inputLines)
                 .map(RopeBridge::toMotion)
                 .flatMap(RopeBridge::toCoordinates)
-                .map(coordinate -> {
-                    Coordinate head = headCoordinate.accumulateAndGet(coordinate, Coordinate::add);
-                    Coordinate tail = tailCoordinate.get();
+                .map(vector -> {
+                    headAndTailsCoords[HEAD_INDEX] = headAndTailsCoords[HEAD_INDEX].add(vector);
 
-                    int headX = head.x();
-                    int headY = head.y();
-                    int tailX = tail.x();
-                    int tailY = tail.y();
-                    
-                    if (headX == tailX) {
-                        int distance = headY - tailY;
-                        if (pointsDoNotTouch(distance)) {
-                            tailY = moveByOneToSignDirection(tailY, distance);
-                        }
-                    }
-                    if (headY == tailY) {
-                        int distance = headX - tailX;
-                        if (pointsDoNotTouch(distance)) {
-                            tailX = moveByOneToSignDirection(tailX, distance);
-                        }
-                    }
-                    
-                    if (headX != tailX && headY != tailY) {
-                        int xDistance = headX - tailX;
-                        int yDistance = headY - tailY;
+                    IntStream.range(TAILS_START_INDEX, HEAD_WITH_TAILS_COUNT)
+                            .forEach(index ->
+                                    headAndTailsCoords[index] = moveTail(
+                                            headAndTailsCoords[index - 1],
+                                            headAndTailsCoords[index]
+                                    )
+                            );
 
-                        if (pointsDoNotTouch(xDistance) || pointsDoNotTouch(yDistance)) {
-                            tailX = moveByOneToSignDirection(tailX, xDistance);
-                            tailY = moveByOneToSignDirection(tailY, yDistance);
-                        }
-                    }
+                    return headAndTailsCoords[LAST_TAIL_INDEX];
 
-                    Coordinate newTailPosition = new Coordinate(tailX, tailY);
-                    tailCoordinate.set(newTailPosition);
-                    
-                    return newTailPosition;
-                    
                 })
                 .collect(Collectors.toSet());
-        log.info(String.valueOf(x.size()));
+
+        log.info(String.valueOf(lastTailVisitedUniquePositions.size()));
+    }
+
+    private static Coordinate moveTail(Coordinate head, Coordinate tail) {
+
+        int headX = head.x();
+        int headY = head.y();
+        int tailX = tail.x();
+        int tailY = tail.y();
+
+        if (headX == tailX) {
+            int distance = headY - tailY;
+            if (pointsDoNotTouch(distance)) {
+                tailY = moveByOneToSignDirection(tailY, distance);
+            }
+        }
+        if (headY == tailY) {
+            int distance = headX - tailX;
+            if (pointsDoNotTouch(distance)) {
+                tailX = moveByOneToSignDirection(tailX, distance);
+            }
+        }
+
+        if (headX != tailX && headY != tailY) {
+            int xDistance = headX - tailX;
+            int yDistance = headY - tailY;
+
+            if (pointsDoNotTouch(xDistance) || pointsDoNotTouch(yDistance)) {
+                tailX = moveByOneToSignDirection(tailX, xDistance);
+                tailY = moveByOneToSignDirection(tailY, yDistance);
+            }
+        }
+
+        return new Coordinate(tailX, tailY);
     }
 
     private static boolean pointsDoNotTouch(int distance) {
