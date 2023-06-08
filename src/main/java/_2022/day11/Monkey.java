@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public record Monkey(int id,
-                     List<Integer> worryLevels,
-                     UnaryOperator<Integer> operation,
+                     List<Long> worryLevels,
+                     UnaryOperator<Long> operation,
                      Test test) {
 
 }

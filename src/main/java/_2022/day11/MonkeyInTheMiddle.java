@@ -13,9 +13,9 @@ import util.SolvableTask;
 @Log
 public class MonkeyInTheMiddle implements SolvableTask {
 
-
-    private static final int MAX_ROUNDS = 20;
+    private static final int MAX_ROUNDS = 10_000;
     private static final int MONKEY_DATA_ROWS_COUNT = 7;
+    private static final int ALL_TEST_DIVIDERS_MULTIPLICATION = 9_699_690;
 
     public static void main(String[] args) {
         new MonkeyInTheMiddle().solve();
@@ -27,27 +27,28 @@ public class MonkeyInTheMiddle implements SolvableTask {
 
         List<Monkey> monkeys = fillMonkeysData(inputLines);
 
-        int[] itemInspectionCountByMonkey = iterateRoundsAndReturnInspectionsCount(monkeys);
+        long[] itemInspectionCountByMonkey = iterateRoundsAndReturnInspectionsCount(monkeys);
 
-        Integer top2InspectionsMultiplied = Arrays.stream(itemInspectionCountByMonkey)
+        Long top2InspectionsMultiplied = Arrays.stream(itemInspectionCountByMonkey)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .limit(2)
                 .reduce((first, second) -> first * second)
                 .orElseThrow();
-        
+
         log.info(String.valueOf(top2InspectionsMultiplied));
 
     }
 
-    private static int[] iterateRoundsAndReturnInspectionsCount(List<Monkey> monkeys) {
-        int[] itemInspectionCountByMonkey = new int[monkeys.size()];
+    private static long[] iterateRoundsAndReturnInspectionsCount(List<Monkey> monkeys) {
+        long[] itemInspectionCountByMonkey = new long[monkeys.size()];
 
         for (int round = 0; round < MAX_ROUNDS; round++) {
             for (Monkey monkey : monkeys) {
                 monkey.worryLevels().forEach(level -> {
-                    int levelAfterInspection = monkey.operation().apply(level);
-                    int levelAfterBored = levelAfterInspection / 3;
+                    long levelAfterInspection = monkey.operation().apply(level);
+                    // mod by all possible dividers multiplication, to lower number scale
+                    long levelAfterBored = levelAfterInspection % ALL_TEST_DIVIDERS_MULTIPLICATION;
 
                     Test test = monkey.test();
                     int passOnTo = levelAfterBored % test.divisor() == 0
@@ -70,8 +71,8 @@ public class MonkeyInTheMiddle implements SolvableTask {
 
         for (int i = 0; i < inputLines.length; i += MONKEY_DATA_ROWS_COUNT) {
             int id = parseId(inputLines[i]);
-            List<Integer> worryLevels = parseWorryLevels(inputLines[i + 1]);
-            UnaryOperator<Integer> operation = parseOperation(inputLines[i + 2]);
+            List<Long> worryLevels = parseWorryLevels(inputLines[i + 1]);
+            UnaryOperator<Long> operation = parseOperation(inputLines[i + 2]);
             int divisor = parseDivisor(inputLines[i + 3]);
             int passToOnTrue = parsePassTo(inputLines[i + 4]);
             int passToOnFalse = parsePassTo(inputLines[i + 5]);
@@ -116,13 +117,13 @@ public class MonkeyInTheMiddle implements SolvableTask {
         return Integer.parseInt(divisor);
     }
 
-    private UnaryOperator<Integer> parseOperation(String inputLine) {
+    private UnaryOperator<Long> parseOperation(String inputLine) {
         int worryLevelsStartIndex = inputLine.indexOf("= old") + 6;
         String equationString = inputLine.substring(worryLevelsStartIndex);
         String[] equationParts = equationString.split(" ");
 
-        BinaryOperator<Integer> binaryOperator = switch (equationParts[0]) {
-            case "+" -> Integer::sum;
+        BinaryOperator<Long> binaryOperator = switch (equationParts[0]) {
+            case "+" -> Long::sum;
             case "*" -> (a, b) -> a * b;
             default -> throw new IllegalStateException("Unexpected value: " + equationParts[0]);
         };
@@ -130,17 +131,17 @@ public class MonkeyInTheMiddle implements SolvableTask {
         return switch (equationParts[1]) {
             case "old" -> (operand) -> binaryOperator.apply(operand, operand);
             default ->
-                    (operand) -> binaryOperator.apply(operand, Integer.parseInt(equationParts[1]));
+                    (operand) -> binaryOperator.apply(operand, Long.parseLong(equationParts[1]));
         };
     }
 
-    private List<Integer> parseWorryLevels(String inputLine) {
+    private List<Long> parseWorryLevels(String inputLine) {
         int worryLevelsStartIndex = inputLine.indexOf(":") + 2;
         String worryLevelsLine = inputLine.substring(worryLevelsStartIndex);
         String[] worryLevels = worryLevelsLine.split(", ");
 
         return Arrays.stream(worryLevels)
-                .map(Integer::parseInt)
+                .map(Long::parseLong)
                 .collect(Collectors.toList());
     }
 
