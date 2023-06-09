@@ -1,7 +1,10 @@
 package _2022.day12;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import lombok.extern.java.Log;
 import util.SolvableTask;
@@ -9,6 +12,7 @@ import util.SolvableTask;
 @Log
 public class HillClimbingAlgorithm implements SolvableTask {
 
+    private static final int A_VALUE = 1;
     private static final int START_VALUE = 0;
     private static final int END_VALUE = 27;
     private static final int CHAR_BASE = 96;
@@ -24,12 +28,18 @@ public class HillClimbingAlgorithm implements SolvableTask {
 
         int[][] heightsMatrix = extractHeights(inputLines);
 
-        Position start = findPosition(heightsMatrix, START_VALUE);
-        Position end = findPosition(heightsMatrix, END_VALUE);
+        Position end = findPositions(heightsMatrix, END_VALUE).get(0);
+        List<Position> startPositions = findPositions(heightsMatrix, START_VALUE);
+        startPositions.addAll(findPositions(heightsMatrix, A_VALUE));
 
-        int[][] distancesMap = BFS(heightsMatrix, start, end);
+        int shortestPath = startPositions.stream()
+                .map(start -> BFS(heightsMatrix, start, end))
+                .filter(Objects::nonNull)
+                .mapToInt(map -> map[end.row()][end.column()])
+                .min()
+                .orElseThrow();
 
-        log.info(String.valueOf(distancesMap[end.row()][end.column()]));
+        log.info(String.valueOf(shortestPath));
 
     }
 
@@ -45,15 +55,18 @@ public class HillClimbingAlgorithm implements SolvableTask {
                 .toArray(int[][]::new);
     }
 
-    private static Position findPosition(int[][] heightsMatrix, int valueToFind) {
+    private static List<Position> findPositions(int[][] heightsMatrix, int valueToFind) {
+        List<Position> positions = new ArrayList<>();
+
         for (int i = 0; i < heightsMatrix.length; i++) {
             for (int j = 0; j < heightsMatrix[0].length; j++) {
                 if (heightsMatrix[i][j] == valueToFind) {
-                    return new Position(i, j);
+                    positions.add(new Position(i, j));
                 }
             }
         }
-        throw new RuntimeException(valueToFind + " not found!");
+
+        return positions;
     }
 
     private static int[][] BFS(int[][] heightsMatrix, Position start, Position end) {
@@ -76,7 +89,7 @@ public class HillClimbingAlgorithm implements SolvableTask {
             queue.addAll(queueToVisit);
         }
 
-        return new int[0][0];
+        return null;
     }
 
     private static int[][] createAndPrefillDistanceMapWithUnvisited(int[][] heightsMatrix) {
