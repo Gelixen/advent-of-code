@@ -4,15 +4,15 @@ import static _2022.day14.CoordinateType.EMPTY;
 
 public record Coordinate(CoordinateType type, int x, int y) {
     public Coordinate getCoordinateBelow(CoordinateType type) {
-        return new Coordinate(type, x, y + 1);
+        return new Coordinate(type, x + 1, y);
     }
 
     public Coordinate getCoordinateBelow() {
-        return new Coordinate(EMPTY, x, y + 1);
+        return new Coordinate(EMPTY, x + 1, y);
     }
 
     public Coordinate getCoordinateBelowRight() {
-        return new Coordinate(type, x - 1, y + 1);
+        return new Coordinate(type, x + 1, y - 1);
     }
 
     public Coordinate getCoordinateBelowLeft() {

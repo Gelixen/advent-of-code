@@ -13,7 +13,8 @@ import static _2022.day14.CoordinateType.*;
 @Log
 public class RegolithReservoir implements SolvableTask {
 
-    private static final Coordinate SAND_POUR_POINT = new Coordinate(SAND_SPAWNER, 500, 0);
+    private static final Coordinate SAND_POUR_POINT = new Coordinate(SAND_SPAWNER, 0, 500);
+    private static final int FLOOR_LEVEL_OFFSET = 2;
 
     public static void main(String[] args) {
         new RegolithReservoir().solve();
@@ -37,20 +38,28 @@ public class RegolithReservoir implements SolvableTask {
         System.out.println(xAxis.getMin() + " - " + xAxis.getMax());
         System.out.println(yAxis.getMin() + " - " + yAxis.getMax());
 
+        int floorLevel = xAxis.getMax() + FLOOR_LEVEL_OFFSET;
+
+        int yMin = yAxis.getMin() - floorLevel;
+        int yMax = yAxis.getMax() + floorLevel;
+        IntStream.range(yMin, yMax)
+                .mapToObj(y -> new Coordinate(ROCK, floorLevel, y))
+                .forEach(coordinates::add);
+
         int settledCount = 0;
-        Coordinate sandCoordinate = SAND_POUR_POINT.getCoordinateBelow(SAND);
+        Coordinate sandCoordinate = SAND_POUR_POINT;
 
         while (true) {
-            if (fallingIntoAbyss(xAxis, yAxis, sandCoordinate)) {
-                return settledCount;
-            }
-
             if (isBlocked(coordinates, sandCoordinate.getCoordinateBelow())) {
                 if (isBlocked(coordinates, sandCoordinate.getCoordinateBelowRight())) {
                     if (isBlocked(coordinates, sandCoordinate.getCoordinateBelowLeft())) {
+                        if (SAND_POUR_POINT.equals(sandCoordinate)) {
+                            return settledCount + 1;
+                        }
+
                         settledCount++;
                         coordinates.add(sandCoordinate);
-                        sandCoordinate = SAND_POUR_POINT.getCoordinateBelow(SAND);
+                        sandCoordinate = SAND_POUR_POINT;
                     } else {
                         sandCoordinate = sandCoordinate.getCoordinateBelowLeft();
                     }
@@ -66,13 +75,6 @@ public class RegolithReservoir implements SolvableTask {
     private static boolean isBlocked(List<Coordinate> coordinates, Coordinate currentSandCoordinate) {
         return coordinates.stream()
                 .anyMatch(coordinate -> coordinate.equals(currentSandCoordinate));
-    }
-
-    private static boolean fallingIntoAbyss(IntSummaryStatistics xAxis, IntSummaryStatistics yAxis, Coordinate coordinate) {
-        int x = coordinate.x();
-        int y = coordinate.y();
-
-        return x < xAxis.getMin() || x > xAxis.getMax() || y > yAxis.getMax();
     }
 
     private List<Coordinate> getCoordinates(String[] lines) {
@@ -115,8 +117,8 @@ public class RegolithReservoir implements SolvableTask {
     public Coordinate mapToCoordinate(String coordinateString) {
         String[] coordinates = coordinateString.split(",");
 
-        int x = Integer.parseInt(coordinates[0]);
-        int y = Integer.parseInt(coordinates[1]);
+        int x = Integer.parseInt(coordinates[1]);
+        int y = Integer.parseInt(coordinates[0]);
 
         return new Coordinate(ROCK, x, y);
     }
