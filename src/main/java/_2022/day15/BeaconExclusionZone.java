@@ -4,12 +4,17 @@ import lombok.extern.java.Log;
 import util.SolvableTask;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Log
 public class BeaconExclusionZone implements SolvableTask {
 
-    public static final int CAPTURE_LINE_Y = 2_000_000;
+    private static final int LOWER_AXIS_LIMIT = 0;
+    private static final int HIGHER_AXIS_LIMIT = 4_000_000;
 
     public static void main(String[] args) {
         new BeaconExclusionZone().solve();
@@ -18,32 +23,75 @@ public class BeaconExclusionZone implements SolvableTask {
     @Override
     public void solve() {
         String[] lines = getInputLines();
-        long result = Arrays.stream(lines)
-                .map(SensorAndBeaconExtractor::new)
-                .map(SensorAndBeaconExtractor::extract)
-                .filter(BeaconExclusionZone::isCapturePointWithinSensorRange)
-                .flatMapToInt(sensorAndBeacon -> {
-                    Coordinate sensor = sensorAndBeacon.sensor();
-                    int verticalDistanceToCaptureLine = Math.abs(sensor.y() - CAPTURE_LINE_Y);
-                    int remainderForXAxisDistance = sensorAndBeacon.getManhattanDistance() - verticalDistanceToCaptureLine;
 
-                    int captureLineXStart = sensor.x() - remainderForXAxisDistance;
-                    int captureLineXEnd = sensor.x() + remainderForXAxisDistance;
+        Set<Zone> zones = Arrays.stream(lines)
+                .map(ZoneExtractor::new)
+                .map(ZoneExtractor::extract)
+                .collect(Collectors.toSet());
 
-                    return IntStream.range(captureLineXStart, captureLineXEnd);
-                })
-                .distinct()
-                .count();
+        Set<Coordinate> externalLayerCoordinates = zones.stream()
+                .flatMap(BeaconExclusionZone::getExternalLayerCoordinates)
+                .collect(Collectors.toSet());
 
-        log.info(String.valueOf(result));
+
+        Coordinate distressBeaconCoordinate = externalLayerCoordinates.stream()
+                .filter(coordinate -> isNotWithinAnySensorRange(zones, coordinate))
+                .findFirst()
+                .orElseThrow();
+
+        long tuningFrequency = (long) distressBeaconCoordinate.x() * HIGHER_AXIS_LIMIT + distressBeaconCoordinate.y();
+
+        log.info(String.valueOf(tuningFrequency));
     }
 
-    private static boolean isCapturePointWithinSensorRange(SensorAndBeacon sensorAndBeacon) {
-        int sensorY = sensorAndBeacon.sensor().y();
-        int radius = sensorAndBeacon.getManhattanDistance();
+    private static Stream<Coordinate> getExternalLayerCoordinates(Zone zone) {
+        Coordinate sensor = zone.sensor();
+        int radius = zone.getManhattanDistance();
 
-        return sensorY + radius > CAPTURE_LINE_Y
-                && sensorY - radius < CAPTURE_LINE_Y;
+        int lowestYOutside = Math.max(LOWER_AXIS_LIMIT, sensor.y() - radius - 1);
+        int highestYOutside = Math.min(HIGHER_AXIS_LIMIT, sensor.y() + radius + 1);
+
+        return IntStream.rangeClosed(lowestYOutside, highestYOutside)
+                .boxed()
+                .flatMap(movingY -> {
+                    int verticalDistanceToMovingY = Math.abs(sensor.y() - movingY);
+                    int remainderForXAxisDistance = zone.getManhattanDistance() - verticalDistanceToMovingY;
+
+                    int higherXOutsideForMovingY = sensor.x() + remainderForXAxisDistance + 1;
+                    int lowerXOutsideForMovingY = sensor.x() - remainderForXAxisDistance - 1;
+
+                    Set<Coordinate> externalPoints = new HashSet<>();
+
+                    if (isNotOutsideTheLimits(higherXOutsideForMovingY)) {
+                        externalPoints.add(new Coordinate(higherXOutsideForMovingY, movingY));
+                    }
+
+                    if (isNotOutsideTheLimits(lowerXOutsideForMovingY)) {
+                        externalPoints.add(new Coordinate(lowerXOutsideForMovingY, movingY));
+                    }
+
+                    return externalPoints.stream();
+                });
+    }
+
+    private static boolean isNotOutsideTheLimits(int higherXOutsideForMovingY) {
+        return higherXOutsideForMovingY >= LOWER_AXIS_LIMIT && higherXOutsideForMovingY <= HIGHER_AXIS_LIMIT;
+    }
+
+
+    private static boolean isNotWithinAnySensorRange(Set<Zone> zones, Coordinate coordinate) {
+        return zones.stream().noneMatch(zone -> isWithinSensorRange(zone, coordinate));
+    }
+
+    private static boolean isWithinSensorRange(Zone zone, Coordinate coordinate) {
+        Coordinate sensor = zone.sensor();
+        int radius = zone.getManhattanDistance();
+
+        int xDifference = Math.abs(sensor.x() - coordinate.x());
+        int yDifference = Math.abs(sensor.y() - coordinate.y());
+        int manhattanDistanceToCoordinate = xDifference + yDifference;
+
+        return radius >= manhattanDistanceToCoordinate;
     }
 
 }
