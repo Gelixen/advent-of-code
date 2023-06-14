@@ -48,6 +48,7 @@ public class RegolithReservoir implements SolvableTask {
 
         int settledCount = 0;
         Coordinate sandCoordinate = SAND_POUR_POINT;
+        LinkedList<Coordinate> traces = new LinkedList<>();
 
         while (true) {
             if (isBlocked(coordinates, sandCoordinate.getCoordinateBelow())) {
@@ -59,14 +60,17 @@ public class RegolithReservoir implements SolvableTask {
 
                         settledCount++;
                         coordinates.add(sandCoordinate);
-                        sandCoordinate = SAND_POUR_POINT;
+                        sandCoordinate = traces.pop();
                     } else {
+                        traces.push(sandCoordinate);
                         sandCoordinate = sandCoordinate.getCoordinateBelowLeft();
                     }
                 } else {
+                    traces.push(sandCoordinate);
                     sandCoordinate = sandCoordinate.getCoordinateBelowRight();
                 }
             } else {
+                traces.push(sandCoordinate);
                 sandCoordinate = sandCoordinate.getCoordinateBelow(SAND);
             }
         }
