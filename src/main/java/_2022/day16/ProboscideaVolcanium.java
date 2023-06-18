@@ -2,7 +2,9 @@ package _2022.day16;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
@@ -13,9 +15,6 @@ import util.SolvableTask;
 
 @Log
 public class ProboscideaVolcanium implements SolvableTask {
-
-    private static final String STARTING_VALVE = "AA";
-    private static final int MINUTES_LEFT = 30;
 
     public static void main(String[] args) {
         new ProboscideaVolcanium().solve();
@@ -38,57 +37,33 @@ public class ProboscideaVolcanium implements SolvableTask {
     }
 
     private int calculateMostPressure(Map<String, Valve> valveMap,
-            Map<String, Map<String, Integer>> allDistancesMap) {
+            Map<String, Map<String, Integer>> distancesMap) {
 
-        Map<String, Valve> valvesToVisit = valveMap.keySet().stream()
-                .map(valveMap::get)
-                .filter(valve -> valve.flowRate() > 0 || valve.name().endsWith(STARTING_VALVE))
-                .collect(Collectors.toMap(Valve::name, Function.identity()));
+        List<PathWithPressure> pathsList =
+                new PathTraverser(valveMap, distancesMap).getPathsWithPressure();
 
-        return calculateMostPressure(
-                valveMap,
-                allDistancesMap,
-                valvesToVisit,
-                STARTING_VALVE,
-                MINUTES_LEFT
-        );
-    }
+        List<PathWithPressure> distinctPathsList = pathsList.stream().distinct().toList();
 
-    private int calculateMostPressure(Map<String, Valve> valveMap,
-            Map<String, Map<String, Integer>> allDistancesMap,
-            Map<String, Valve> valvesToVisit,
-            String currentValveName,
-            int remainingMinutes) {
+        return distinctPathsList.parallelStream()
+                .mapToInt(pathWithPressure -> {
+                    LinkedHashSet<String> path = pathWithPressure.path();
+                    int pressure = pathWithPressure.pressure();
 
-        HashMap<String, Valve> valvesToVisitCopy = new HashMap<>(valvesToVisit);
-        valvesToVisitCopy.remove(currentValveName);
+                    return distinctPathsList.parallelStream()
+                            .filter(nestedPathWithPressure ->
+                                    Collections.disjoint(path, nestedPathWithPressure.path())
+                            )
+                            .mapToInt(nestedPath -> nestedPath.pressure() + pressure)
+                            .max()
+                            .orElseThrow();
 
-        return valvesToVisitCopy.keySet().stream()
-                .mapToInt(valveName -> {
-                    Integer distanceFromCurrent = allDistancesMap.get(currentValveName)
-                            .get(valveName);
-
-                    if (remainingMinutes <= distanceFromCurrent - 1) {
-                        return 0;
-                    }
-
-                    int leftOverTimeAfterTravelAndOpen = remainingMinutes - distanceFromCurrent - 1;
-                    int pressureBuildUpTillEnd =
-                            valveMap.get(valveName).flowRate() * leftOverTimeAfterTravelAndOpen;
-
-                    return pressureBuildUpTillEnd +
-                            calculateMostPressure(valveMap,
-                                    allDistancesMap,
-                                    valvesToVisitCopy,
-                                    valveName,
-                                    leftOverTimeAfterTravelAndOpen
-                            );
                 })
                 .max()
-                .orElse(0);
+                .orElseThrow();
     }
 
-    private Map<String, Map<String, Integer>> getAllValvesDistancesMap(Map<String, Valve> valveMap) {
+    private Map<String, Map<String, Integer>> getAllValvesDistancesMap(
+            Map<String, Valve> valveMap) {
         return valveMap.keySet().stream()
                 .map(key -> Map.entry(key, getValveDistanceMap(valveMap, key)))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
