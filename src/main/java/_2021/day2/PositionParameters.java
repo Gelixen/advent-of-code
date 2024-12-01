@@ -1,12 +1,6 @@
 package _2021.day2;
 
-import lombok.Value;
-
-@Value
-public class PositionParameters {
-    int horizontalPosition;
-    int depth;
-    int aim;
+public record PositionParameters(int horizontalPosition, int depth, int aim) {
 
     public PositionParameters increaseHorizontalPosition(int step) {
         return new PositionParameters(horizontalPosition + step, depth, aim);

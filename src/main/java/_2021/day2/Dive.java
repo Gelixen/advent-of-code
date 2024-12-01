@@ -1,9 +1,8 @@
 package _2021.day2;
 
+import java.util.Arrays;
 import lombok.extern.java.Log;
 import util.SolvableTask;
-
-import java.util.Arrays;
 
 @Log
 public class Dive implements SolvableTask {
@@ -23,7 +22,7 @@ public class Dive implements SolvableTask {
         Arrays.stream(getInputLines())
                 .forEach(this::navigate);
 
-        log.info(String.valueOf(position.getHorizontalPosition() * position.getDepth()));
+        log.info(String.valueOf(position.horizontalPosition() * position.depth()));
     }
 
     public void navigate(String commandLine) {

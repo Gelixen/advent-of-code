@@ -1,9 +1,9 @@
 package _2020.day1;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 class ReportRepairTest {
 
@@ -13,9 +13,9 @@ class ReportRepairTest {
 
         Triple result = ReportRepair.findSumPair(input, 5);
 
-        assertEquals(5, result.getFirst());
-        assertEquals(0, result.getSecond());
-        assertEquals(0, result.getThird());
+        assertEquals(5, result.first());
+        assertEquals(0, result.second());
+        assertEquals(0, result.third());
     }
 
     @Test
@@ -24,9 +24,9 @@ class ReportRepairTest {
 
         Triple result = ReportRepair.findSumPair(input, 9);
 
-        assertEquals(3, result.getFirst());
-        assertEquals(3, result.getSecond());
-        assertEquals(3, result.getThird());
+        assertEquals(3, result.first());
+        assertEquals(3, result.second());
+        assertEquals(3, result.third());
     }
 
     @Test
@@ -35,9 +35,9 @@ class ReportRepairTest {
 
         Triple result = ReportRepair.findSumPair(input, 7);
 
-        assertEquals(2, result.getFirst());
-        assertEquals(0, result.getSecond());
-        assertEquals(5, result.getThird());
+        assertEquals(2, result.first());
+        assertEquals(0, result.second());
+        assertEquals(5, result.third());
     }
 
     @Test
@@ -46,9 +46,9 @@ class ReportRepairTest {
 
         Triple result = ReportRepair.findSumPair(input, 9);
 
-        assertEquals(2, result.getFirst());
-        assertEquals(4, result.getSecond());
-        assertEquals(3, result.getThird());
+        assertEquals(2, result.first());
+        assertEquals(4, result.second());
+        assertEquals(3, result.third());
     }
 
     @Test

@@ -1,10 +1,9 @@
 package _2020.day4;
 
 import _2020.day4.Passport.PassportBuilder;
+import java.util.Arrays;
 import lombok.extern.java.Log;
 import util.SolvableTask;
-
-import java.util.Arrays;
 
 @Log
 public class PassportProcessing implements SolvableTask {
@@ -45,8 +44,8 @@ public class PassportProcessing implements SolvableTask {
     }
 
     private void buildPassport(PassportBuilder passportBuilder, Field field) {
-        PassportField.findByFieldCode(field.getCode())
-                .addValue(passportBuilder, field.getValue());
+        PassportField.findByFieldCode(field.code())
+                .addValue(passportBuilder, field.value());
     }
 
     private boolean validateBasedOnNPE(PassportBuilder passportBuilder) {

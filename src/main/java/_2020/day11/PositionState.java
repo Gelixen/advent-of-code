@@ -1,13 +1,10 @@
 package _2020.day11;
 
-import lombok.Getter;
-
 public enum PositionState {
     FLOOR('.'),
     EMPTY_SEAT('L'),
     OCCUPIED_SEAT('#');
 
-    @Getter
     private final char symbol;
 
     PositionState(char symbol) {
@@ -25,5 +22,9 @@ public enum PositionState {
 
     boolean equalsBySymbol(char symbol) {
         return this.symbol == symbol;
+    }
+
+    public char getSymbol() {
+        return symbol;
     }
 }

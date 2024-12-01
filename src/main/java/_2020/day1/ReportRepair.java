@@ -1,9 +1,8 @@
 package _2020.day1;
 
+import java.util.Arrays;
 import lombok.extern.java.Log;
 import util.SolvableTask;
-
-import java.util.Arrays;
 
 @Log
 public class ReportRepair implements SolvableTask {
@@ -41,7 +40,7 @@ public class ReportRepair implements SolvableTask {
     }
 
     public static int multiply(Triple triple) {
-        return triple.getFirst() * triple.getSecond() * triple.getThird();
+        return triple.first() * triple.second() * triple.third();
     }
 
 }

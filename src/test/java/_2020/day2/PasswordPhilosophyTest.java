@@ -1,8 +1,8 @@
 package _2020.day2;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 class PasswordPhilosophyTest {
 
@@ -26,10 +26,10 @@ class PasswordPhilosophyTest {
 
         PasswordWithPolicy passwordWithPolicy = PasswordPhilosophy.toPasswordWithPolicy(input);
 
-        assertEquals(password, passwordWithPolicy.getPassword());
-        PasswordPolicy passwordPolicy = passwordWithPolicy.getPasswordPolicy();
-        assertEquals(letter, passwordPolicy.getLetter());
-        assertEquals(firstPosition - 1, passwordPolicy.getFirstPosition());
-        assertEquals(secondPosition - 1, passwordPolicy.getSecondPosition());
+        assertEquals(password, passwordWithPolicy.password());
+        PasswordPolicy passwordPolicy = passwordWithPolicy.passwordPolicy();
+        assertEquals(letter, passwordPolicy.letter());
+        assertEquals(firstPosition - 1, passwordPolicy.firstPosition());
+        assertEquals(secondPosition - 1, passwordPolicy.secondPosition());
     }
 }

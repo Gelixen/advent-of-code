@@ -1,19 +1,14 @@
 package _2020.day8;
 
-import lombok.Getter;
+import java.util.Arrays;
 import lombok.extern.java.Log;
 import util.SolvableTask;
-
-import java.util.Arrays;
 
 @Log
 public class HandheldHalting implements SolvableTask {
 
-    @Getter
     private int accumulatorValue;
-    @Getter
     private int nextCommandIndex;
-    @Getter
     private boolean endReached;
 
     private String[] commandsList = getInputLines();
@@ -100,4 +95,15 @@ public class HandheldHalting implements SolvableTask {
         }
     }
 
+    public int getAccumulatorValue() {
+        return accumulatorValue;
+    }
+
+    public int getNextCommandIndex() {
+        return nextCommandIndex;
+    }
+
+    public boolean isEndReached() {
+        return endReached;
+    }
 }

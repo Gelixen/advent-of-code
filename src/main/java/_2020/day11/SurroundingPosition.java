@@ -1,8 +1,5 @@
 package _2020.day11;
 
-import lombok.Getter;
-
-@Getter
 public enum SurroundingPosition {
     UP_LEFT(-1, -1),
     UP(-1, 0),
@@ -21,4 +18,11 @@ public enum SurroundingPosition {
         this.column = column;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
 }

@@ -1,9 +1,8 @@
 package _2020.day12;
 
+import java.util.Arrays;
 import lombok.extern.java.Log;
 import util.SolvableTask;
-
-import java.util.Arrays;
 
 @Log
 public class RainRisk implements SolvableTask {
@@ -27,8 +26,8 @@ public class RainRisk implements SolvableTask {
     }
 
     public int getManhattanDistance() {
-        int absX = Math.abs(position.getX());
-        int absY = Math.abs(position.getY());
+        int absX = Math.abs(position.x());
+        int absY = Math.abs(position.y());
 
         return absX + absY;
     }

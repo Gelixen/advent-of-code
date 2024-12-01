@@ -1,16 +1,15 @@
 package _2020.day12;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
 import static _2020.day12.Rotation.EAST;
 import static _2020.day12.Rotation.SOUTH;
 import static _2020.day12.Rotation.WEST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class RainRiskTest {
 
@@ -35,9 +34,9 @@ class RainRiskTest {
 
         Position result = rainRisk.navigate(instruction);
 
-        assertEquals(expectedX, result.getX());
-        assertEquals(expectedY, result.getY());
-        assertEquals(expectedRotation, result.getRotation());
+        assertEquals(expectedX, result.x());
+        assertEquals(expectedY, result.y());
+        assertEquals(expectedRotation, result.rotation());
     }
 
     @Test

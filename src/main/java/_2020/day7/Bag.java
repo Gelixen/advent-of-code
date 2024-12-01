@@ -1,9 +1,5 @@
 package _2020.day7;
 
-import lombok.Value;
+public record Bag(String color, int amount) {
 
-@Value
-public class Bag {
-    String color;
-    int amount;
 }

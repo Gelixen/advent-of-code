@@ -1,14 +1,13 @@
 package _2020.day7;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.stream.Stream;
-
-import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class BagContainerParserTest {
 
@@ -84,7 +83,7 @@ class BagContainerParserTest {
     void parseLine(String line, String expectedContainer, List<String> expectedContained) {
         BagContainer result = BagContainerParser.parseLine(line);
 
-        assertEquals(expectedContainer, result.getContainer());
-        assertEquals(expectedContained, result.getContained());
+        assertEquals(expectedContainer, result.container());
+        assertEquals(expectedContained, result.contained());
     }
 }

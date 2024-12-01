@@ -1,9 +1,9 @@
 package _2020.day5;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BinaryBoardingTest {
 
@@ -19,8 +19,8 @@ class BinaryBoardingTest {
     void findSeat(String code, int expectedRow, int expectedColumn, int expectedId) {
         Seat seat = BinaryBoarding.findSeat(code);
 
-        assertEquals(expectedRow, seat.getRow());
-        assertEquals(expectedColumn, seat.getColumn());
+        assertEquals(expectedRow, seat.row());
+        assertEquals(expectedColumn, seat.column());
         assertEquals(expectedId, seat.getId());
     }
 

@@ -1,18 +1,18 @@
 package _2020.day7;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@UtilityClass
-public class BagContainerParser {
+public final class BagContainerParser {
 
     private static final String NO_OTHER_BAGS = "no other bags.";
     private static final String BAGS_CONTAIN_SPLITTER = " bags contain ";
     private static final String CONTAINED_BAGS_SPLITTER = ", ";
+
+    private BagContainerParser() {
+    }
 
     static BagContainer parseLine(String line) {
         String[] splitContainerAndContainedBags = line.split(BAGS_CONTAIN_SPLITTER, 2);

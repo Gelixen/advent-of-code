@@ -1,14 +1,11 @@
 package _2020.day12;
 
-import lombok.Value;
+import static _2020.day12.Rotation.EAST;
+import static _2020.day12.Rotation.NORTH;
+import static _2020.day12.Rotation.SOUTH;
+import static _2020.day12.Rotation.WEST;
 
-import static _2020.day12.Rotation.*;
-
-@Value
-public class Position {
-    int x;
-    int y;
-    Rotation rotation;
+public record Position(int x, int y, Rotation rotation) {
 
     public Position moveNorth(int value) {
         return new Position(x, y + value, rotation);

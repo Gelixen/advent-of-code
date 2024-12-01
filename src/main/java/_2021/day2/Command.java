@@ -4,7 +4,7 @@ public enum Command {
     FORWARD {
         @Override
         PositionParameters execute(PositionParameters position, int step) {
-            int depthStep = position.getAim() * step;
+            int depthStep = position.aim() * step;
             return position.increaseHorizontalPosition(step)
                     .increaseDepth(depthStep);
         }
