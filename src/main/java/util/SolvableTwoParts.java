@@ -2,8 +2,8 @@ package util;
 
 public interface SolvableTwoParts {
 
-    void solve1Part();
+    int solve1Part();
 
-    void solve2Part();
+    int solve2Part();
 
 }

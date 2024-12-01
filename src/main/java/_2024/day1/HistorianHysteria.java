@@ -6,12 +6,12 @@ import java.util.*;
 
 public class HistorianHysteria implements SolvableTwoPartsTask {
     public static void main(String[] args) {
-        new HistorianHysteria().solve1Part();
-        new HistorianHysteria().solve2Part();
+        System.out.println(new HistorianHysteria().solve1Part());
+        System.out.println(new HistorianHysteria().solve2Part());
     }
 
     @Override
-    public void solve1Part() {
+    public int solve1Part() {
         Queue<Integer> firstLocationIdsList = new PriorityQueue<>();
         Queue<Integer> secondLocationIdsList = new PriorityQueue<>();
 
@@ -27,11 +27,11 @@ public class HistorianHysteria implements SolvableTwoPartsTask {
             result += Math.abs(firstLocationIdsList.remove() - secondLocationIdsList.remove());
         }
 
-        System.out.println(result);
+        return result;
     }
 
     @Override
-    public void solve2Part() {
+    public int solve2Part() {
         Queue<Integer> firstLocationIdsList = new PriorityQueue<>();
         Map<Integer, Integer> secondLocationIdsList = new HashMap<>();
 
@@ -41,10 +41,8 @@ public class HistorianHysteria implements SolvableTwoPartsTask {
             secondLocationIdsList.compute(Integer.valueOf(locationIds[1]), (key, value) -> (value == null) ? 1 : value + 1);
         });
 
-        var result = firstLocationIdsList.stream()
+        return firstLocationIdsList.stream()
                 .map(locationId -> locationId * secondLocationIdsList.getOrDefault(locationId, 0))
                 .reduce(0, Integer::sum);
-
-        System.out.println(result);
     }
 }
